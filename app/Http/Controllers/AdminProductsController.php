@@ -39,21 +39,34 @@ class AdminProductsController extends Controller
 
     public function store(Request $request)
     {
-        // Validate đơn giản (tối thiểu cho chạy)
-        $request->validate([
-            'tensp' => 'required',
-            'gia' => 'required|numeric',
-        ]);
+        $product = new Product();
+        $product->tensp = $request->tensp;
+        $product->maloaisp = $request->maloaisp;
+        $product->soluong = $request->soluong;
+        $product->giasp = $request->giasp;
+        $product->mota = $request->mota;
+        $product->manhinh = $request->manhinh;
+        $product->ram = $request->ram;
+        $product->cpu = $request->cpu;
+        $product->ocung = $request->ocung;
+        $product->hang = $request->hang;
+        $product->thoigian = $request->thoigian;
+        $product->khuyenmai = $request->khuyenmai;
 
-        Product::create([
-            'tensp' => $request->tensp,
-            'gia' => $request->gia,
-            'mota' => $request->mota ?? '',
-            'ngaytao' => now(),
-        ]);
+        // Upload ảnh
+        if ($request->hasFile('hinhanh')) {
+            $file = $request->file('hinhanh');
+            $path = 'images/' . time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('images/'), $path);
+            $product->hinhanh = $path;
+        }
 
-        return redirect()->route('products.index')->with('success', 'Thêm sản phẩm thành công!');
+        $product->save();
+
+        return redirect()->route('products.index')
+                        ->with('success', 'Thêm sản phẩm thành công!');
     }
+
 
     // ============================
     //        SỬA SẢN PHẨM
@@ -89,11 +102,20 @@ class AdminProductsController extends Controller
     // ============================
     //        XÓA SẢN PHẨM
     // ============================
-    public function delete($id)
+    public function delete($masp)
     {
-        $product = Product::findOrFail($id);
+        // Tìm sản phẩm theo ID
+        $product = Product::find($masp);
+
+        if (!$product) {
+            return redirect()->route('products.index')->with('error', 'Sản phẩm không tồn tại!');
+        }
+
+        // Xóa sản phẩm
         $product->delete();
 
+        // Chuyển về trang danh sách với thông báo thành công
         return redirect()->route('products.index')->with('success', 'Xóa sản phẩm thành công!');
     }
+
 }

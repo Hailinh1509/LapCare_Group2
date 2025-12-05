@@ -86,6 +86,21 @@ td img {
             <button class="btn btn-primary" type="submit">Tìm</button>
         </div>
     </form>
+    <!-- Hiển thị thông báo thành công -->
+    @if(session('success'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
+
+    <!-- Hiển thị thông báo lỗi -->
+    @if(session('error'))
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            {{ session('error') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
 
     <div class="card">
         <div class="card-body">
@@ -144,12 +159,22 @@ td img {
                             <td>{{ $p->ngaysua }}</td>
                             <td class="text-center-cell">{{ $p->khuyenmai }}</td>
                             <td class="text-center-cell col-action">
-                                <a href="#" class="btn btn-sm btn-primary"><i class="fa fa-edit"></i></a>
-                                <a href="#" class="btn btn-sm btn-danger"
-                                   onclick="return confirm('Bạn có chắc muốn xóa?')">
-                                   <i class="fa fa-trash"></i>
+                                <!-- Nút Sửa -->
+                                <a href="{{ route('products.edit', $p->masp) }}" class="btn btn-sm btn-primary">
+                                    <i class="fa fa-edit"></i>
                                 </a>
+
+                                <!-- Nút Xóa -->
+                                <form action="{{ route('products.delete', $p->masp) }}" method="POST" style="display:inline-block;">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-sm btn-danger"
+                                            onclick="return confirm('Bạn có chắc muốn xóa?')">
+                                        <i class="fa fa-trash"></i>
+                                    </button>
+                                </form>
                             </td>
+
                         </tr>
                         @endforeach
                     </tbody>
