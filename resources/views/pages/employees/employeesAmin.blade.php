@@ -8,6 +8,24 @@
         text-align: center !important;
         font-size: 16px !important; 
     }
+    .btn-viewall {
+    background:#1101c8ff;
+    border:none;
+    height:40px;
+    display:flex;
+    align-items:center;
+    color:white;
+    padding: 0 15px;
+    transition: 0.2s;
+      text-decoration: none; /
+}
+
+/* Khi hover đổi sang tím nhạt hơn */
+.btn-viewall:hover {
+    background:#3c2bff;
+    color:white;
+      text-decoration: none; 
+}
 </style>
 
 <div class="container mt-4">
@@ -16,24 +34,29 @@
         <h3>Danh sách nhân viên</h3>
     </div>
 
-    {{-- 🔍 THANH TÌM KIẾM --}}
+ <div class="d-flex justify-content-between align-items-center mb-4" style="max-width: 100%;">
+    
+    {{-- Thanh tìm kiếm --}}
     <form action="{{ route('employees.search') }}" method="GET" 
-          class="d-flex mb-4" style="max-width: 380px;">
-        
+          class="d-flex" style="max-width: 380px;">    
         <input type="text" name="keyword" class="form-control"
                placeholder="Tìm nhân viên theo tên..." required
                style="border-radius: 8px 0 0 8px;">
 
         <button class="btn btn-primary"
-                style="
-                    background:#4c3cf1;
-                    border:none;
-                    padding: 8px 18px;
-                    border-radius:0 8px 8px 0;
-                ">
+                style="background:#1101c8ff; border:none; border-radius:0 8px 8px 0;">
             Tìm
         </button>
     </form>
+
+    {{-- Nút xem tất cả --}}
+<a href="{{ route('employees.index') }}" class="btn-viewall">
+    Xem tất cả
+</a>
+
+
+</div>
+
 
     {{-- BẢNG DANH SÁCH NHÂN VIÊN --}}
     <table class="table table-bordered table-striped">

@@ -49,9 +49,10 @@ class EmployeeController extends Controller
     }
     public function search(Request $request)
 {
-    $keyword = $request->input('keyword');
+    $keyword = strtolower($request->input('keyword'));
 
-    $employees = Nhanvien::where('tennv', 'LIKE', "%$keyword%")->get();
+    $employees = Nhanvien::whereRaw('LOWER(tennv) LIKE ?', ["%$keyword%"])
+                         ->get();
 
     return view(
         'pages.employees.employeesAmin',

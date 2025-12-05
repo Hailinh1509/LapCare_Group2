@@ -30,4 +30,17 @@ class CustomersController extends Controller
         TaiKhoan::destroy($id);
         return redirect()->route('customers.index')->with('success', 'Xóa thành công');
     }
+    public function search(Request $request)
+{
+ $keyword = strtolower($request->input('keyword'));
+
+$customers = TaiKhoan::whereRaw('LOWER(tentk) LIKE ?', ["%$keyword%"])
+                     ->get();
+
+    return view(
+        'pages.customers.customersAmin',
+        compact('customers'),
+        ['title' => 'Kết quả tìm kiếm']
+    );
+} 
 }

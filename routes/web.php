@@ -126,6 +126,7 @@ Route::delete('/employees/{id}', [EmployeeController::class, 'destroy'])->name('
 
 //Tìm kiếm nhân viên
 Route::get('/employees/search', [EmployeeController::class, 'search'])->name('employees.search');
+
 //Trang tài khoản khách hàng (admin)
 use App\Http\Controllers\CustomersController;
 
@@ -133,6 +134,8 @@ Route::get('/customers', [CustomersController::class, 'index'])->name('customers
 Route::get('/customers/create', [CustomersController::class, 'create'])->name('customers.create');
 Route::get('/customers/{id}/edit', [CustomersController::class, 'edit'])->name('customers.edit');
 Route::delete('/customers/{id}', [CustomersController::class, 'destroy'])->name('customers.destroy');
+//Tìm kiếm khách hàng
+Route::get('/customers/search', [CustomersController::class, 'search'])->name('customers.search');
 
 /*Route::get('/', function () {
     return view('detail');
