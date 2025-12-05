@@ -162,32 +162,40 @@
         </div>
     </div>
 </div><!--end sản phẩn liên quan-->
-<!--thêm đánh giá sản phẩm-->
+<!-- đánh giá sản phẩm-->
  <div class="review-section mt-5">
     <h2 class="mb-3" style="font-weight:bold;">Đánh giá sản phẩm</h2>
     <div class="rating-summary" style="padding:20px 0;">
-    <h5>Trung bình</h5>
-    <div style="font-size:40px; font-weight:bold;">{{ $avgRating }}</div>
-
+    <h3>Trung bình </h3>
+ 
+<div style="display:flex; align-items:flex-start; gap:50px;">
+    <!-- Khối điểm trung bình -->
     <div>
-        @for($i = 1; $i <= 5; $i++)
-            @if($i <= round($avgRating))
-                <span style="color:#ffb400; font-size:25px;">★</span>
-            @else
-                <span style="color:#ccc; font-size:25px;">★</span>
-            @endif
-        @endfor
+        <div style="font-size: 40px; font-weight:bold; margin-bottom:5px;">
+        {{ $avgRating }}
+        </div>
+
+        <div>
+            @for($i = 1; $i <= 5; $i++)
+                @if($i <= round($avgRating))
+                    <span style="color:#ffb400; font-size:28px;">★</span>
+                @else
+                    <span style="color:#ccc; font-size:28px;">★</span>
+                @endif
+            @endfor
+        </div>
     </div>
 
-    <div style="margin-top:10px;">
+    <!-- Khối thống kê sao -->
+    <div style="margin-top:3px;">
         @foreach([5,4,3,2,1] as $star)
-        <div style="display:flex; align-items:center; margin:3px 0;">
+        <div style="display:flex; align-items:center; margin:5px 0;font-size: 25px;">
             <span style="width:50px; font-weight:bold;">{{ $star }} ★</span>
 
-            {{-- Thanh bar --}}
+            <!-- Thanh bar -->
             <div style="
                 height:8px;
-                width:300px;
+                width:250px;
                 background:#e5e5e5;
                 border-radius:4px;
                 margin:0 10px;
@@ -204,6 +212,22 @@
         </div>
         @endforeach
     </div>
+
+</div> <!-- END flex -->
+
+    <!-- BỘ LỌC SAO -->
+<div class="filter-rating" style="margin: 15px 0;">
+    <form method="GET">
+        <input type="hidden" name="masp" value="{{ $product->masp }}">
+        <button name="star" value="" class="btn btn-sm {{ request('star')=='' ? 'btn-primary' : 'btn-outline-primary' }}" style="font-size: 1.2em;">Tất cả</button>
+        @foreach([5,4,3,2,1] as $s)
+            <button name="star" value="{{ $s }}" 
+                class="btn btn-sm {{ request('star')==$s ? 'btn-primary' : 'btn-outline-primary' }}" style="font-size: 1.2em;">
+                {{ $s }} ★ ({{ $ratingCounts[$s] }})
+            </button>
+        @endforeach
+    </form>
+</div>
 </div>
     @if($reviews->count() == 0)
         <p>Chưa có đánh giá nào</p>

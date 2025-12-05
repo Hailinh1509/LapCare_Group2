@@ -13,13 +13,24 @@ use App\Http\Controllers\ProductsController;
 */
 
 // Trang chủ
+use App\Http\Controllers\DetailController;
+use App\Http\Controllers\CategoryController;
+
+// 1.Trang chủ (home page)
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
-// Danh sách sản phẩm
+// 2.Danh sách sản phẩm
 Route::get('/products', [ProductController::class, 'index'])->name('products.list');
-
-// Chi tiết sản phẩm
-Route::get('/products/{id}', [ProductController::class, 'show'])->name('products.detail');
+// 3.Chi tiết sản phẩm (VD: /products/5)
+Route::get('/product/{masp}', [DetailController::class, 'detail'])->name('product.detail');
+//3.1nút thêm vào giỏ
+Route::post('/cart/add', [DetailController::class, 'addToCart'])->name('cart.add');
+//3.2nút mua hàng
+Route::post('/buy-now', [DetailController::class, 'buyNow'])->name('buy.now');
+//3.3thêm đánh giá
+Route::post('/product/{masp}/review', [DetailController::class, 'addReview'])
+    ->name('product.review')->middleware('auth');
+Route::get('/detail/{masp}', [DetailController::class, 'detail'])->name('detail');
 
 // Chi tiết sản phẩm (Layout cũ)
 Route::get('/detail/{masp}', [ProductController::class, 'detail'])->name('detail');
@@ -48,10 +59,18 @@ Route::get('/dashboard', function () {
 })
 ->middleware(['auth', 'verified'])
 ->name('dashboard');
-
 // Danh mục
 Route::get('/categories', fn() => view('pages.categories.index', ['title'=>'Tất cả danh mục']))->name('categories.index');
 Route::get('/categories/create', fn() => view('pages.categories.create', ['title'=>'Thêm danh mục']))->name('categories.create');
+
+// CATEGORIES
+//Route::get('/categories', fn() => view('pages.categories.index', ['title'=>'Tất cả danh mục']))->name('categories.index');
+Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
+Route::post('/categories/search', [CategoryController::class, 'search'])->name('categories.search');
+Route::get('/categories/create', [CategoryController::class, 'create'])->name('categories.create');
+Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store');
+
+//Route::get('/categories/create', fn() => view('pages.categories.create', ['title'=>'Thêm danh mục']))->name('categories.create');
 
 // Products (Admin)
 Route::get('/admin/products', fn() => view('pages.products.index', ['title'=>'Tất cả sản phẩm']))->name('products.index');
@@ -67,6 +86,7 @@ Route::get('/accounts', fn() => view('pages.accounts.index', ['title'=>'Tất c�
 Route::get('/accounts/create', fn() => view('pages.accounts.create', ['title'=>'Thêm tài khoản']))->name('accounts.create');
 Route::get('/employees', fn() => view('pages.accounts.employees', ['title'=>'Tài khoản nhân viên']))->name('employees.index');
 Route::get('/customers', fn() => view('pages.accounts.customers', ['title'=>'Tài khoản khách hàng']))->name('customers.index');
+
 
 
 /*
@@ -113,6 +133,10 @@ Route::get('/customers', [CustomersController::class, 'index'])->name('customers
 Route::get('/customers/create', [CustomersController::class, 'create'])->name('customers.create');
 Route::get('/customers/{id}/edit', [CustomersController::class, 'edit'])->name('customers.edit');
 Route::delete('/customers/{id}', [CustomersController::class, 'destroy'])->name('customers.destroy');
+
+/*Route::get('/', function () {
+    return view('detail');
+});*/
 
 
 /*
