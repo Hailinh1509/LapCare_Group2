@@ -1,49 +1,88 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ProfileController;
 
-// Trang welcome
-Route::get('/', function () {
-    return view('welcome');
-});
+/*
+|--------------------------------------------------------------------------
+| USER ROUTES (Giao diện khách hàng)
+|--------------------------------------------------------------------------
+*/
 
-// Dashboard
+// Trang chủ
+Route::get('/', [HomeController::class, 'index'])->name('home');
+
+// Danh sách sản phẩm
+Route::get('/products', [ProductController::class, 'index'])->name('products.list');
+
+// Chi tiết sản phẩm
+Route::get('/products/{id}', [ProductController::class, 'show'])->name('products.detail');
+
+// Chi tiết sản phẩm (Layout cũ)
+Route::get('/detail/{masp}', [ProductController::class, 'detail'])->name('detail');
+
+// Review sản phẩm
+Route::post('/product/{masp}/review', [ProductController::class, 'addReview'])
+    ->middleware('auth')
+    ->name('product.review');
+
+// Thêm vào giỏ hàng
+Route::post('/cart/add', [ProductController::class, 'addToCart'])->name('cart.add');
+
+// Mua ngay
+Route::post('/buy-now', [ProductController::class, 'buyNow'])->name('buy.now');
+
+
+/*
+|--------------------------------------------------------------------------
+| DASHBOARD + ADMIN ROUTES
+|--------------------------------------------------------------------------
+*/
+
+// Dashboard dành cho Admin
 Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+    return view('pages.dashboard', ['title' => 'Dashboard']);
+})
+->middleware(['auth', 'verified'])
+->name('dashboard');
 
-// Nhóm route profile (Laravel Breeze)
+// Danh mục
+Route::get('/categories', fn() => view('pages.categories.index', ['title'=>'Tất cả danh mục']))->name('categories.index');
+Route::get('/categories/create', fn() => view('pages.categories.create', ['title'=>'Thêm danh mục']))->name('categories.create');
+
+// Products (Admin)
+Route::get('/admin/products', fn() => view('pages.products.index', ['title'=>'Tất cả sản phẩm']))->name('products.index');
+Route::get('/admin/products/create', fn() => view('pages.products.create', ['title'=>'Thêm sản phẩm']))->name('products.create');
+
+// Các trang đơn
+Route::get('/reviews', fn() => view('pages.reviews.index', ['title'=>'Quản lý đánh giá']))->name('reviews.index');
+Route::get('/contacts', fn() => view('pages.contacts.index', ['title'=>'Quản lý liên hệ']))->name('contacts.index');
+Route::get('/orders', fn() => view('pages.orders.index', ['title'=>'Quản lý đơn hàng']))->name('orders.index');
+
+// Accounts
+Route::get('/accounts', fn() => view('pages.accounts.index', ['title'=>'Tất cả tài khoản']))->name('accounts.index');
+Route::get('/accounts/create', fn() => view('pages.accounts.create', ['title'=>'Thêm tài khoản']))->name('accounts.create');
+Route::get('/employees', fn() => view('pages.accounts.employees', ['title'=>'Tài khoản nhân viên']))->name('employees.index');
+Route::get('/customers', fn() => view('pages.accounts.customers', ['title'=>'Tài khoản khách hàng']))->name('customers.index');
+
+
+/*
+|--------------------------------------------------------------------------
+| PROFILE (Laravel Breeze)
+|--------------------------------------------------------------------------
+*/
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+
 /*
 |--------------------------------------------------------------------------
-| Product Routes
+| AUTH (Laravel Breeze)
 |--------------------------------------------------------------------------
 */
-
-//Route::get('/', function () {
-//    return view('detail');
-//});
-
-Route::get('/product/{masp}', [ProductController::class, 'detail'])
-    ->name('product.detail');
-
-Route::post('/cart/add', [ProductController::class, 'addToCart'])->name('cart.add');
-
-Route::post('/buy-now', [ProductController::class, 'buyNow'])->name('buy.now');
-
-Route::post('/product/{masp}/review', [ProductController::class, 'addReview'])
-    ->name('product.review')
-    ->middleware('auth');
-
-Route::get('/detail/{masp}', [ProductController::class, 'detail'])
-    ->name('detail');
-
-// Laravel Breeze Auth Routes
 require __DIR__.'/auth.php';
