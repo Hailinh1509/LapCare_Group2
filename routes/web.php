@@ -18,6 +18,7 @@ Route::get('/', function () {
     return redirect()->route('dashboard');
 });
 
+
 Route::get('/dashboard', function () {
     return view('pages.dashboard', ['title' => 'Dashboard']);
 })->name('dashboard');
@@ -40,4 +41,20 @@ Route::get('/accounts', fn() => view('pages.accounts.index', ['title'=>'Tất c�
 Route::get('/accounts/create', fn() => view('pages.accounts.create', ['title'=>'Thêm tài khoản']))->name('accounts.create');
 Route::get('/employees', fn() => view('pages.accounts.employees', ['title'=>'Tài khoản nhân viên']))->name('employees.index');
 Route::get('/customers', fn() => view('pages.accounts.customers', ['title'=>'Tài khoản khách hàng']))->name('customers.index');
+
+/*Route::get('/', function () {
+    return view('detail');
+});*/
+
+
+Route::get('/product/{masp}', [ProductController::class, 'detail'])
+    ->name('product.detail');
+//use App\Http\Controllers\ProductController;
+Route::post('/cart/add', [ProductController::class, 'addToCart'])->name('cart.add');
+Route::post('/buy-now', [ProductController::class, 'buyNow'])->name('buy.now');
+Route::post('/product/{masp}/review', [ProductController::class, 'addReview'])
+    ->name('product.review')->middleware('auth');
+Route::get('/detail/{masp}', [ProductController::class, 'detail'])->name('detail');
+
+
 
