@@ -4,11 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class VaiTro extends Model
+class Vaitro extends Model
 {
     protected $table = 'vaitro';
     protected $primaryKey = 'mavt';
+    protected $keyType = 'string';
+    public $incrementing = false;
     public $timestamps = false;
-
-    protected $fillable = ['tenvt', 'mota'];
 }

@@ -86,6 +86,33 @@ Route::get('/', function () {
 
 // Trang sản phẩm
 Route::get('/sanpham', [ProductsController::class, 'index'])->name('products.index');
+//Trang tài khoản (khách hàng và nhân viên trong admin)
+// routes/web.php
+use App\Http\Controllers\EmployeeController;
+
+// Danh sách
+Route::get('/employees', [EmployeeController::class, 'index'])->name('employees.index');
+
+// Thêm nhân viên
+Route::get('/employees/create', [EmployeeController::class, 'create'])->name('employees.create');
+Route::post('/employees', [EmployeeController::class, 'store'])->name('employees.store');
+
+// Sửa nhân viên
+Route::get('/employees/{id}/edit', [EmployeeController::class, 'edit'])->name('employees.edit');
+Route::put('/employees/{id}', [EmployeeController::class, 'update'])->name('employees.update');
+
+// Xóa nhân viên
+Route::delete('/employees/{id}', [EmployeeController::class, 'destroy'])->name('employees.destroy');
+
+//Trang tài khoản khách hàng (admin)
+use App\Http\Controllers\CustomersController;
+
+Route::get('/customers', [CustomersController::class, 'index'])->name('customers.index');
+Route::get('/customers/create', [CustomersController::class, 'create'])->name('customers.create');
+Route::get('/customers/{id}/edit', [CustomersController::class, 'edit'])->name('customers.edit');
+Route::delete('/customers/{id}', [CustomersController::class, 'destroy'])->name('customers.destroy');
+
+
 /*
 |--------------------------------------------------------------------------
 | AUTH (Laravel Breeze)
