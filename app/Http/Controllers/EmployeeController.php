@@ -47,4 +47,17 @@ class EmployeeController extends Controller
         Nhanvien::destroy($id);
         return redirect()->route('employees.index')->with('success', 'Xóa thành công');
     }
+    public function search(Request $request)
+{
+    $keyword = $request->input('keyword');
+
+    $employees = Nhanvien::where('tennv', 'LIKE', "%$keyword%")->get();
+
+    return view(
+        'pages.employees.employeesAmin',
+        compact('employees'),
+        ['title' => 'Kết quả tìm kiếm']
+    );
+}
+
 }

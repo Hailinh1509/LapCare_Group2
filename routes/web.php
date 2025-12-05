@@ -104,6 +104,8 @@ Route::put('/employees/{id}', [EmployeeController::class, 'update'])->name('empl
 // Xóa nhân viên
 Route::delete('/employees/{id}', [EmployeeController::class, 'destroy'])->name('employees.destroy');
 
+//Tìm kiếm nhân viên
+Route::get('/employees/search', [EmployeeController::class, 'search'])->name('employees.search');
 //Trang tài khoản khách hàng (admin)
 use App\Http\Controllers\CustomersController;
 
