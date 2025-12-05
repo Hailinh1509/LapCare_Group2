@@ -5,7 +5,7 @@
 <style>
 /* ---------- HEADER BẢNG ---------- */
 table thead.custom-header th {
-    background-color: #994890ff !important; /* xanh lá */
+    background-color: #9a4b91ff !important; /* xanh lá */
     color: #fff !important;               /* chữ trắng */
     text-align: center;
     vertical-align: middle;
