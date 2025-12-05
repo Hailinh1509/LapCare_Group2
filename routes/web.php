@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ProductsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -79,7 +80,12 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+Route::get('/', function () {
+    return view('welcome');
+});
 
+// Trang sản phẩm
+Route::get('/sanpham', [ProductsController::class, 'index'])->name('products.index');
 /*
 |--------------------------------------------------------------------------
 | AUTH (Laravel Breeze)
