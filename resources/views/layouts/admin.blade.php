@@ -32,6 +32,7 @@
             border-radius: 6px;
             padding: 8px 12px;
             font-size: 14px;
+            transition: 0.2s;
         }
 
         .sidebar .nav-link:hover {
@@ -44,6 +45,7 @@
             padding: 7px 20px;
             border-radius: 5px;
             margin: 2px 0;
+            transition: 0.2s;
         }
 
         .dropdown-item:hover {
@@ -67,10 +69,10 @@
             font-size: 14px;
             color: #751f8fff;
             text-decoration: none;
+            transition: 0.2s;
         }
 
         .navbar-right a:hover {
-            text-decoration: none;
             color: #c035eaff;
         }
     </style>
@@ -85,6 +87,7 @@
 
     <ul class="nav flex-column">
 
+        <!-- Dashboard -->
         <li class="nav-item">
             <a class="nav-link" href="{{ route('admin.dashboard') }}">
                 <i class="fa fa-home me-2"></i> Dashboard
@@ -93,8 +96,7 @@
 
         <!-- QUẢN LÝ DANH MỤC -->
         <li class="nav-item">
-            <a class="nav-link d-flex justify-content-between"
-               data-bs-toggle="collapse" href="#cateMenu">
+            <a class="nav-link d-flex justify-content-between" data-bs-toggle="collapse" href="#cateMenu">
                 <span><i class="fa fa-list me-2"></i> Quản Lý Danh Mục</span>
                 <i class="fa fa-chevron-down small"></i>
             </a>
@@ -107,29 +109,32 @@
 
         <!-- QUẢN LÝ SẢN PHẨM -->
         <li class="nav-item">
-            <a class="nav-link d-flex justify-content-between"
-               data-bs-toggle="collapse" href="#prodMenu">
+            <a class="nav-link d-flex justify-content-between" data-bs-toggle="collapse" href="#prodMenu">
                 <span><i class="fa fa-box me-2"></i> Quản Lý Sản Phẩm</span>
                 <i class="fa fa-chevron-down small"></i>
             </a>
+
             <div class="collapse ps-2" id="prodMenu">
                 <a class="dropdown-item" href="{{ route('products.index') }}">Tất Cả Sản Phẩm</a>
                 <a class="dropdown-item" href="{{ route('products.create') }}">Thêm Sản Phẩm</a>
             </div>
         </li>
 
+        <!-- ĐÁNH GIÁ -->
         <li class="nav-item">
             <a class="nav-link" href="{{ route('reviews.index') }}">
                 <i class="fa fa-star me-2"></i> Quản Lý Đánh Giá
             </a>
         </li>
 
+        <!-- LIÊN HỆ -->
         <li class="nav-item">
             <a class="nav-link" href="{{ route('contacts.index') }}">
                 <i class="fa fa-envelope me-2"></i> Quản Lý Liên Hệ
             </a>
         </li>
 
+        <!-- ĐƠN HÀNG -->
         <li class="nav-item">
             <a class="nav-link" href="{{ route('orders.index') }}">
                 <i class="fa fa-file me-2"></i> Quản Lý Đơn Hàng
@@ -138,8 +143,7 @@
 
         <!-- TÀI KHOẢN -->
         <li class="nav-item">
-            <a class="nav-link d-flex justify-content-between"
-               data-bs-toggle="collapse" href="#accMenu">
+            <a class="nav-link d-flex justify-content-between" data-bs-toggle="collapse" href="#accMenu">
                 <span><i class="fa fa-user me-2"></i> Quản Lý Tài Khoản</span>
                 <i class="fa fa-chevron-down small"></i>
             </a>
@@ -150,6 +154,7 @@
                 <a class="dropdown-item" href="{{ route('employees.create') }}">Thêm Tài Khoản</a>
             </div>
         </li>
+
     </ul>
 </div>
 
@@ -157,7 +162,7 @@
 <div class="content-wrapper">
 
     <!-- TOP BAR -->
-    <nav class="navbar navbar-custom">
+    <nav class="navbar navbar-custom d-flex align-items-center">
         <span class="fw-bold fs-5">{{ $title ?? 'Dashboard' }}</span>
 
         <div class="ms-auto navbar-right">
@@ -165,9 +170,13 @@
                 <i class="fa fa-globe me-1"></i> Xem Website
             </a>
 
-            <a href="#">
+            <a href="#" 
+                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                 <i class="fa fa-sign-out-alt me-1"></i> Đăng Xuất
             </a>
+            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                @csrf
+            </form>
         </div>
     </nav>
 
