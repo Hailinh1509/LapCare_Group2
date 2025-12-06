@@ -127,13 +127,6 @@
             </a>
         </li>
 
-        <!-- LIÊN HỆ -->
-        <li class="nav-item">
-            <a class="nav-link" href="{{ route('contacts.index') }}">
-                <i class="fa fa-envelope me-2"></i> Quản Lý Liên Hệ
-            </a>
-        </li>
-
         <!-- ĐƠN HÀNG -->
         <li class="nav-item">
             <a class="nav-link" href="{{ route('orders.index') }}">
@@ -152,6 +145,30 @@
                 <a class="dropdown-item" href="{{ route('employees.index') }}">Tài Khoản Nhân Viên</a>
                 <a class="dropdown-item" href="{{ route('customers.index') }}">Tài Khoản Khách Hàng</a>
                 <a class="dropdown-item" href="{{ route('employees.create') }}">Thêm Tài Khoản</a>
+            </div>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link d-flex justify-content-between" data-bs-toggle="collapse" href="#supplierMenu">
+                <span><i class="fa fa-truck me-2"></i> Quản Lý Nhà Cung Cấp</span>
+                <i class="fa fa-chevron-down small"></i>
+            </a>
+
+            <div class="collapse ps-2" id="supplierMenu">
+                <a class="dropdown-item" href="{{ route('suppliers.index') }}">Tất Cả Nhà Cung Cấp</a>
+                <a class="dropdown-item" href="{{ route('suppliers.create') }}">Thêm Nhà Cung Cấp</a>
+            </div>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link d-flex justify-content-between" data-bs-toggle="collapse" href="#importMenu">
+                <span><i class="fa fa-file-import me-2"></i> Quản Lý Đơn Nhập</span>
+                <i class="fa fa-chevron-down small"></i>
+            </a>
+
+            <div class="collapse ps-2" id="importMenu">
+                <a class="dropdown-item" href="{{ route('imports.index') }}">Tất Cả Đơn Nhập</a>
+                <a class="dropdown-item" href="{{ route('imports.create') }}">Thêm Đơn Nhập</a>
             </div>
         </li>
 

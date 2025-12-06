@@ -170,20 +170,6 @@ Route::prefix('admin')->group(function () {
     Route::get('/reviews', [ReviewController::class, 'index'])->name('reviews.index');
 });
 
-
-/*
-|--------------------------------------------------------------------------
-| CONTACTS
-|--------------------------------------------------------------------------
-*/
-
-use App\Http\Controllers\ContactController;
-
-Route::prefix('admin')->group(function () {
-    Route::get('/contacts', [ContactController::class, 'index'])->name('contacts.index');
-});
-
-
 /*
 |--------------------------------------------------------------------------
 | ORDERS
@@ -194,6 +180,44 @@ use App\Http\Controllers\OrderController;
 
 Route::prefix('admin')->group(function () {
     Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
+});
+
+
+/*
+|--------------------------------------------------------------------------
+| SUPPLIERS (NHÀ CUNG CẤP)
+|--------------------------------------------------------------------------
+*/
+use App\Http\Controllers\SupplierController;
+
+Route::prefix('admin')->group(function () {
+    Route::get('/suppliers', [SupplierController::class, 'index'])->name('suppliers.index');
+    Route::get('/suppliers/create', [SupplierController::class, 'create'])->name('suppliers.create');
+    Route::post('/suppliers', [SupplierController::class, 'store'])->name('suppliers.store');
+
+    // Nếu bạn muốn CRUD đầy đủ:
+    Route::get('/suppliers/{id}/edit', [SupplierController::class, 'edit'])->name('suppliers.edit');
+    Route::put('/suppliers/{id}', [SupplierController::class, 'update'])->name('suppliers.update');
+    Route::delete('/suppliers/{id}', [SupplierController::class, 'destroy'])->name('suppliers.destroy');
+});
+
+
+/*
+|--------------------------------------------------------------------------
+| IMPORT ORDERS (ĐƠN NHẬP)
+|--------------------------------------------------------------------------
+*/
+use App\Http\Controllers\ImportOrderController;
+
+Route::prefix('admin')->group(function () {
+    Route::get('/imports', [ImportOrderController::class, 'index'])->name('imports.index');
+    Route::get('/imports/create', [ImportOrderController::class, 'create'])->name('imports.create');
+    Route::post('/imports', [ImportOrderController::class, 'store'])->name('imports.store');
+
+    // CRUD đầy đủ (nếu muốn)
+    Route::get('/imports/{id}/edit', [ImportOrderController::class, 'edit'])->name('imports.edit');
+    Route::put('/imports/{id}', [ImportOrderController::class, 'update'])->name('imports.update');
+    Route::delete('/imports/{id}', [ImportOrderController::class, 'destroy'])->name('imports.destroy');
 });
 
 
