@@ -3,222 +3,50 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProductController;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\ProductsController;
+use App\Http\Controllers\PageController;
+use App\Http\Controllers\ThanhtoanController;
 
-
-/*
-|--------------------------------------------------------------------------
-| USER ROUTES
-|--------------------------------------------------------------------------
-*/
-
-// Trang chủ
-use App\Http\Controllers\DetailController;
-
-// 1.Trang chủ (home page)
+// Trang chủ (home page)
 Route::get('/', [HomeController::class, 'index'])->name('home');
+// Trang chủ cho người dùng đã đăng nhập
+Route::get('/home-logged', [HomeController::class, 'indexLogged'])->name('home.logged');
 
-// Danh sách sản phẩm (giao diện khách)
-Route::get('/products', [ProductController::class, 'index'])->name('client.products.index');
 
-// Chi tiết sản phẩm
+// Trang "Về chúng tôi"
+Route::get('/ve-chung-toi', [PageController::class, 'about'])->name('about');
+
+// Danh sách sản phẩm
+Route::get('/products', [ProductController::class, 'index'])->name('products.list');
+
+// Chi tiết sản phẩm (VD: /products/5)
 Route::get('/products/{id}', [ProductController::class, 'show'])->name('products.detail');
 
-// Layout chi tiết cũ
-Route::get('/detail/{masp}', [ProductController::class, 'detail'])->name('detail');
+// Trang sản phẩm
+Route::get('/san-pham', [PageController::class, 'products'])->name('products.index');
 
-// Review sản phẩm
-Route::post('/product/{masp}/review', [ProductController::class, 'addReview'])
-    ->middleware('auth')
-    ->name('product.review');
+// Tin tức
+Route::get('/tin-tuc', [PageController::class, 'news'])->name('news.index');
 
-// Thêm vào giỏ hàng
-Route::post('/cart/add', [ProductController::class, 'addToCart'])->name('cart.add');
+// Liên hệ
+Route::get('/lien-he', [PageController::class, 'contact'])->name('contact');
 
-// Mua ngay
-Route::post('/buy-now', [ProductController::class, 'buyNow'])->name('buy.now');
+// Giỏ hàng
+Route::get('/gio-hang', [PageController::class, 'cart'])->name('cart');
 
-
-/*
-|--------------------------------------------------------------------------
-| ADMIN + DASHBOARD
-|--------------------------------------------------------------------------
-*/
-
-use App\Http\Controllers\DashboardController;
-
-Route::prefix('admin')->group(function () {
-
-    Route::get('/dashboard', [DashboardController::class, 'index'])
-        ->name('admin.dashboard');
-
-});
+// Trang đăng nhập (sau này gắn auth)
+Route::get('/dang-nhap', [PageController::class, 'login'])->name('login');
 
 
-/*
-|--------------------------------------------------------------------------
-| ADMIN CATEGORIES
-|--------------------------------------------------------------------------
-*/
+Route::get('/thanh-toan/{masp}', [ThanhtoanController::class, 'show'])
+    ->name('thanhtoan.show');
 
-use App\Http\Controllers\CategoryController;
-
-Route::prefix('admin')->group(function () {
-
-    Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
-    Route::post('/categories/search', [CategoryController::class, 'search'])->name('categories.search');
-    Route::get('/categories/create', [CategoryController::class, 'create'])->name('categories.create');
-    Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store');
-
-});
-
-/*
-|--------------------------------------------------------------------------
-| ADMIN PRODUCTS
-|--------------------------------------------------------------------------
-*/
-
-use App\Http\Controllers\AdminProductsController;
-
-Route::prefix('admin')->group(function () {
-
-    Route::get('/products', [AdminProductsController::class, 'index'])->name('products.index');
-    Route::get('/products/create', [AdminProductsController::class, 'create'])->name('products.create');
-    Route::post('/products', [AdminProductsController::class, 'store'])->name('products.store');
-    Route::get('/products/{masp}/edit', [AdminProductsController::class, 'edit'])->name('products.edit');
-    Route::put('/products/{masp}', [AdminProductsController::class, 'update'])->name('products.update');
-    Route::delete('/products/{id}', [AdminProductsController::class, 'delete'])->name('products.delete');
-
-});
-
-
-/*
-|--------------------------------------------------------------------------
-| PROFILE
-|--------------------------------------------------------------------------
-*/
-
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
-
-
-/*
-|--------------------------------------------------------------------------
-| EMPLOYEES
-|--------------------------------------------------------------------------
-*/
-
-use App\Http\Controllers\EmployeeController;
-    Route::prefix('admin')->group(function () {
-    Route::get('/employees', [EmployeeController::class, 'index'])->name('employees.index');
-    Route::get('/employees/create', [EmployeeController::class, 'create'])->name('employees.create');
-    Route::post('/employees', [EmployeeController::class, 'store'])->name('employees.store');
-    Route::get('/employees/{id}/edit', [EmployeeController::class, 'edit'])->name('employees.edit');
-    Route::put('/employees/{id}', [EmployeeController::class, 'update'])->name('employees.update');
-    Route::delete('/employees/{id}', [EmployeeController::class, 'destroy'])->name('employees.destroy');
-    Route::get('/employees/search', [EmployeeController::class, 'search'])->name('employees.search');
+Route::post('/thanh-toan/{masp}', [ThanhtoanController::class, 'process'])
+    ->name('thanhtoan.process');
     
-    // Thêm nhân viên
-    Route::get('/employees/create', [EmployeeController::class, 'create'])->name('employees.create');
-    Route::post('/employees', [EmployeeController::class, 'store'])->name('employees.store');
-
-    // Sửa nhân viên
-    Route::get('/employees/{id}/edit', [EmployeeController::class, 'edit'])->name('employees.edit');
-    Route::put('/employees/{id}', [EmployeeController::class, 'update'])->name('employees.update');
-
-    // Xóa nhân viên
-    Route::delete('/employees/{id}', [EmployeeController::class, 'destroy'])->name('employees.destroy');
-
-    //Tìm kiếm nhân viên
-    Route::get('/employees/search', [EmployeeController::class, 'search'])->name('employees.search');
-
-});
-
-
-/*
-|--------------------------------------------------------------------------
-| CUSTOMERS
-|--------------------------------------------------------------------------
-*/
-
-use App\Http\Controllers\CustomersController;
-
-Route::prefix('admin')->group(function () {
-Route::get('/customers', [CustomersController::class, 'index'])->name('customers.index');
-Route::get('/customers/create', [CustomersController::class, 'create'])->name('customers.create');
-Route::get('/customers/{id}/edit', [CustomersController::class, 'edit'])->name('customers.edit');
-Route::delete('/customers/{id}', [CustomersController::class, 'destroy'])->name('customers.destroy');
-//Tìm kiếm khách hàng
-Route::get('/customers/search', [CustomersController::class, 'search'])->name('customers.search');
-});
-
-
-
-/*
-|--------------------------------------------------------------------------
-| REVIEWS
-|--------------------------------------------------------------------------
-*/
-
-use App\Http\Controllers\ReviewController;
-
-Route::prefix('admin')->group(function () {
-    Route::get('/reviews', [ReviewController::class, 'index'])->name('reviews.index');
-});
-
-/*
-|--------------------------------------------------------------------------
-| ORDERS
-|--------------------------------------------------------------------------
-*/
-
-use App\Http\Controllers\OrderController;
-
-Route::prefix('admin')->group(function () {
-    Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
-});
-
-
-/*
-|--------------------------------------------------------------------------
-| SUPPLIERS (NHÀ CUNG CẤP)
-|--------------------------------------------------------------------------
-*/
-use App\Http\Controllers\SupplierController;
-
-Route::prefix('admin')->group(function () {
-    Route::get('/suppliers', [SupplierController::class, 'index'])->name('suppliers.index');
-    Route::get('/suppliers/create', [SupplierController::class, 'create'])->name('suppliers.create');
-    Route::post('/suppliers', [SupplierController::class, 'store'])->name('suppliers.store');
-
-    // Nếu bạn muốn CRUD đầy đủ:
-    Route::get('/suppliers/{id}/edit', [SupplierController::class, 'edit'])->name('suppliers.edit');
-    Route::put('/suppliers/{id}', [SupplierController::class, 'update'])->name('suppliers.update');
-    Route::delete('/suppliers/{id}', [SupplierController::class, 'destroy'])->name('suppliers.destroy');
-});
-
-
-/*
-|--------------------------------------------------------------------------
-| IMPORT ORDERS (ĐƠN NHẬP)
-|--------------------------------------------------------------------------
-*/
-use App\Http\Controllers\ImportOrderController;
-
-Route::prefix('admin')->group(function () {
-    Route::get('/imports', [ImportOrderController::class, 'index'])->name('imports.index');
-    Route::get('/imports/create', [ImportOrderController::class, 'create'])->name('imports.create');
-    Route::post('/imports', [ImportOrderController::class, 'store'])->name('imports.store');
-
-    // CRUD đầy đủ (nếu muốn)
-    Route::get('/imports/{id}/edit', [ImportOrderController::class, 'edit'])->name('imports.edit');
-    Route::put('/imports/{id}', [ImportOrderController::class, 'update'])->name('imports.update');
-    Route::delete('/imports/{id}', [ImportOrderController::class, 'destroy'])->name('imports.destroy');
-});
-
-
-require __DIR__.'/auth.php';
+// Một số trang chính sách cho footer (tạm đặt tên)
+Route::get('/chinh-sach-giao-hang-thanh-toan', [PageController::class, 'policyShipping'])->name('policy.shipping');
+Route::get('/chinh-sach-bao-hanh', [PageController::class, 'policy.warranty'])->name('policy.warranty');
+Route::get('/chinh-sach-doi-tra', [PageController::class, 'policy.return'])->name('policy.return');
+Route::get('/chinh-sach-bao-mat-thong-tin', [PageController::class, 'policy.privacy'])->name('policy.privacy');
+Route::get('/chinh-sach-van-chuyen', [PageController::class, 'policy.delivery'])->name('policy.delivery');
+Route::get('/quy-che-hoat-dong', [PageController::class, 'policy.rules'])->name('policy.rules');
