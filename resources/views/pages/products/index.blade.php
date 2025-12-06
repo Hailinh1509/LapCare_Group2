@@ -18,6 +18,22 @@ table thead.custom-header th {
     vertical-align: middle !important;
 }
 
+/* Cố định cột Mã SP */
+td:first-child,
+th:first-child {
+    position: sticky;
+    left: 0;
+    z-index: 3;
+}
+
+/* Cố định cột Tên SP (cột thứ 2) */
+td:nth-child(2),
+th:nth-child(2) {
+    position: sticky;
+    left: 100px; /* khoảng cách từ cột đầu tiên, chỉnh theo độ rộng cột Mã SP */
+    z-index: 3;
+}
+
 /* ---------- ĐỘ RỘNG CỘT ---------- */
 .col-tensp {
     min-width: 250px; 
@@ -143,7 +159,7 @@ td img {
                                 @endif
                             </td>
                             <td class="text-center-cell">{{ $p->soluong }}</td>
-                            <td class="text-center-cell">${{ number_format($p->giasp) }}</td>
+                            <td class="text-center-cell">${{ $p->giasp_formatted }}</td>
                             <td>
                                 <div class="text-truncate description-cell" title="{{ $p->mota }}">
                                     {{ $p->mota }}
@@ -156,7 +172,7 @@ td img {
                             <td class="text-center-cell">{{ $p->hang }}</td>
                             <td class="text-center-cell">{{ $p->thoigian }}</td>
                             <td class="col-action">{{ $p->ngaytao }}</td>
-                            <td>{{ $p->ngaysua }}</td>
+                            <td class="col-action">{{ $p->ngaysua }}</td>
                             <td class="text-center-cell">{{ $p->khuyenmai }}</td>
                             <td class="text-center-cell col-action">
                                 <!-- Nút Sửa -->
@@ -180,7 +196,6 @@ td img {
                     </tbody>
 
                 </table>
-
                 <!-- ---------- PHÂN TRANG ---------- -->
                 <div class="mt-3">
                     {{ $products->withQueryString()->links('pagination::bootstrap-5') }}
@@ -190,7 +205,5 @@ td img {
 
         </div>
     </div>
-
 </div>
-
 @endsection

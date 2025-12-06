@@ -7,14 +7,32 @@ use Illuminate\Database\Eloquent\Model;
 class Product extends Model
 {
     protected $table = 'sanpham';
-    protected $primaryKey = 'masp'; // khai báo primary key đúng
-    public $incrementing = false;   // vì masp không tự tăng (nếu đúng)
-    protected $keyType = 'string';  // nếu masp là chuỗi hoặc varchar
-    public $timestamps = false;
+    protected $primaryKey = 'masp'; 
+    public $incrementing = false;
+    protected $keyType = 'string';
+
+    // Laravel sẽ tự động cập nhật ngaytao/ngaysua
+    const CREATED_AT = 'ngaytao';
+    const UPDATED_AT = 'ngaysua';
+    public $timestamps = true; // Chỉ khai báo một lần
 
     protected $fillable = [
-        'masp', 'tensp', 'maloaisp', 'hinhanh', 'soluong', 'giasp', 'mota', 
-        'manhinh', 'ram', 'cpu', 'ocung', 'hang', 'thoigian', 'ngaytao', 
-        'ngaysua', 'khuyenmai'
+        'masp','tensp','maloaisp','hinhanh','soluong','giasp',
+        'mota','manhinh','ram','cpu','ocung','hang','thoigian','khuyenmai'
     ];
+
+    public function getGiaspFormattedAttribute()
+    {
+        return number_format((int)$this->attributes['giasp'], 0, ',', '.');
+    }
+
+    public function getKhuyenmaiAttribute($value)
+    {
+        return $value ?? 0;
+    }
+
+    public function loai()
+    {
+        return $this->belongsTo(Loai::class, 'maloaisp', 'maloaisp');
+    }
 }
