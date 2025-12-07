@@ -17,14 +17,10 @@ Route::get('/home-logged', [HomeController::class, 'indexLogged'])->name('home.l
 // Trang "Về chúng tôi"
 Route::get('/ve-chung-toi', [PageController::class, 'about'])->name('about');
 
-// Danh sách sản phẩm
-Route::get('/products', [ProductController::class, 'index'])->name('products.list');
+//Đường dẫn trang sản phẩm
 
-// Chi tiết sản phẩm (VD: /products/5)
-Route::get('/products/{id}', [ProductController::class, 'show'])->name('products.detail');
 
-// Trang sản phẩm
-Route::get('/san-pham', [PageController::class, 'products'])->name('products.index');
+
 
 // Tin tức
 Route::get('/tin-tuc', [PageController::class, 'news'])->name('news.index');

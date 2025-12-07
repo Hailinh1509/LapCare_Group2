@@ -8,10 +8,7 @@ use Illuminate\Http\Request;
 
 class PageController extends Controller
 {
-    public function products()
-    {
-        return view('pages.products');
-    }
+//Khai báo trang sản phẩm 
 
     public function news()
     {
