@@ -216,11 +216,11 @@ Route::prefix('admin')->group(function () {
     Route::get('/suppliers/create', [SupplierController::class, 'create'])->name('suppliers.create');
     Route::post('/suppliers', [SupplierController::class, 'store'])->name('suppliers.store');
 
-    // Nếu bạn muốn CRUD đầy đủ:
-    Route::get('/suppliers/{id}/edit', [SupplierController::class, 'edit'])->name('suppliers.edit');
-    Route::put('/suppliers/{id}', [SupplierController::class, 'update'])->name('suppliers.update');
-    Route::delete('/suppliers/{id}', [SupplierController::class, 'destroy'])->name('suppliers.destroy');
+    Route::get('/suppliers/{mancc}/edit', [SupplierController::class, 'edit'])->name('suppliers.edit');
+    Route::put('/suppliers/{mancc}', [SupplierController::class, 'update'])->name('suppliers.update');
+    Route::delete('/suppliers/{mancc}', [SupplierController::class, 'delete'])->name('suppliers.delete');
 });
+
 
 
 /*

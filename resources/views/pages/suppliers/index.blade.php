@@ -17,21 +17,6 @@ table thead.custom-header th {
     vertical-align: middle !important;
 }
 
-/* Cố định cột Mã NCC */
-td:first-child, th:first-child {
-    position: sticky;
-    left: 0;
-    z-index: 3;
-    background: white;
-}
-
-/* Cố định cột Tên NCC */
-td:nth-child(2), th:nth-child(2) {
-    position: sticky;
-    left: 120px;
-    z-index: 3;
-    background: white;
-}
 
 .col-action {
     min-width: 120px;
@@ -79,7 +64,7 @@ td:nth-child(2), th:nth-child(2) {
                     </thead>
 
                     <tbody>
-                        @foreach ($nhacc as $n)
+                        @foreach ($nhacungcap as $n)
                         <tr>
                             <td class="text-center-cell">{{ $n->mancc }}</td>
                             <td>{{ $n->tenncc }}</td>
@@ -112,7 +97,7 @@ td:nth-child(2), th:nth-child(2) {
                 </table>
 
                 <div class="mt-3">
-                    {{ $nhacc->withQueryString()->links('pagination::bootstrap-5') }}
+                    {{ $nhacungcap->withQueryString()->links('pagination::bootstrap-5') }}
                 </div>
 
             </div>
