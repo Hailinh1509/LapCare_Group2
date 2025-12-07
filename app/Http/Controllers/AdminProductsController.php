@@ -86,8 +86,9 @@ class AdminProductsController extends Controller
     }
 
 
+
     // ============================
-    //      FORM SỬA
+    //       SỬA SẢN PHẨM
     // ============================
     public function edit($masp)
     {
@@ -99,17 +100,14 @@ class AdminProductsController extends Controller
         ]);
     }
 
-    // ============================
-    //      XỬ LÝ SỬA
-    // ============================
     public function update(Request $request, $masp)
     {
         $request->validate([
-            'tensp'     => 'required|max:255',
-            'maloaisp'  => 'required|max:50',
-            'soluong'   => 'required|integer|min:0',
-            'giasp'     => 'required|numeric|min:0',
-            'hinhanh'   => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'tensp' => 'required|max:255',
+            'maloaisp' => 'required|max:50',
+            'soluong' => 'required|integer|min:0',
+            'giasp' => 'required|numeric|min:0',
+            'hinhanh' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         $product = Product::findOrFail($masp);
@@ -125,30 +123,21 @@ class AdminProductsController extends Controller
         $product->ocung = $request->ocung;
         $product->hang = $request->hang;
         $product->thoigian = $request->thoigian;
+        $product->khuyenmai = $request->khuyenmai ?? 0;
 
-        // ============================
-        //   Upload ảnh version khi sửa
-        // ============================
+        // Upload ảnh mới và ghi đè file cũ
         if ($request->hasFile('hinhanh')) {
             $file = $request->file('hinhanh');
             $extension = $file->getClientOriginalExtension();
-
-            // Tìm ảnh version cũ → tính version mới
-            $currentFiles = glob(public_path("images/{$product->masp}(*)".".$extension"));
-            $version = count($currentFiles) + 1;
-
-            // Tên mới: masp(1).jpg
-            $fileName = $product->masp . '(' . $version . ').' . $extension;
-
-            $file->move(public_path('images'), $fileName);
-
-            // Cập nhật ảnh hiển thị
-            $product->hinhanh = 'images/' . $fileName;
+            $filename = $product->masp . '.' . $extension;
+            $file->move(public_path('images'), $filename);
+            $product->hinhanh = 'images/' . $filename;
         }
 
         $product->save();
 
-        return redirect()->route('products.index')->with('success', 'Cập nhật sản phẩm thành công!');
+        return redirect()->route('products.index')
+                         ->with('success', 'Cập nhật sản phẩm thành công!');
     }
 
     // ============================
