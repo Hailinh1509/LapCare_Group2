@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 use Illuminate\Http\Request;
 
@@ -28,8 +30,22 @@ class PageController extends Controller
 
     public function login()
     {
-        return view('pages.login');
+        return view('auth.login');
     }
+
+    public function processLogin(Request $request)
+{
+    $credentials = $request->only('email', 'password');
+
+    if (Auth::attempt($credentials, $request->filled('remember'))) {
+        return redirect()->route('home.logged');
+    }
+
+    return back()->withErrors([
+        'email' => 'Email hoặc mật khẩu không đúng.',
+    ])->withInput();
+}
+
 
     // Các trang chính sách footer
     public function policyShipping()   { return view('pages.policy_shipping'); }
