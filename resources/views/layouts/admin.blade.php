@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>{{ $title ?? 'Bakya Admin' }}</title>
-
+    <title>{{ $title ?? 'Hệ thống quản lý LapCare' }}</title>
+    <link rel="icon" type="image/png" href="{{ asset('images/logo.png') }}">
     <!-- BOOTSTRAP -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
@@ -75,6 +75,14 @@
         .navbar-right a:hover {
             color: #c035eaff;
         }
+
+        .title-gradient {
+            background: linear-gradient(90deg, #9a63aeff, #8430a9ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 800 !important;
+            letter-spacing: 1px;
+        }
     </style>
 </head>
 
@@ -83,7 +91,11 @@
 <!-- SIDEBAR -->
 <div class="sidebar">
 
-    <h4 class="fw-bold text-center mb-4">Bakya</h4>
+    <div class="text-center mb-4">
+        <img src="{{ asset('images/logo.png') }}" 
+             alt="Logo"
+             class="sidebar-logo">
+    </div>
 
     <ul class="nav flex-column">
 
@@ -180,7 +192,7 @@
 
     <!-- TOP BAR -->
     <nav class="navbar navbar-custom d-flex align-items-center">
-        <span class="fw-bold fs-5">{{ $title ?? 'Dashboard' }}</span>
+        <span class="fw-bold fs-5 title-gradient">{{ $title ?? 'DASHBOARD' }}</span>
 
         <div class="ms-auto navbar-right">
             <a href="{{ url('/') }}" target="_blank">

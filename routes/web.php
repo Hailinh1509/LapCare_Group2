@@ -13,11 +13,13 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 // Trang chủ cho người dùng đã đăng nhập
 Route::get('/home-logged', [HomeController::class, 'indexLogged'])->name('home.logged');
 
-
 // Trang "Về chúng tôi"
 Route::get('/ve-chung-toi', [PageController::class, 'about'])->name('about');
 
-//Đường dẫn trang sản phẩm
+//HẢI LINH (TÀI KHOẢN)
+Route::get('/account', function () {
+    return view('pages.accounts.index');
+})->name('account');
 
 
 
