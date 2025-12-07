@@ -149,10 +149,11 @@
                         <a href="#">Đổi mật khẩu</a>
 
                         {{-- sau này bạn trỏ action vào route logout --}}
-                        <form method="POST" action="#">
-                            @csrf
-                            <button type="submit">Đăng xuất</button>
-                        </form>
+                    <form action="{{ route('logout') }}" method="POST">
+                        @csrf
+                        <button type="submit" class="btn btn-danger">Đăng xuất</button>
+                    </form>
+
                     </div>
                 </div>
             @else

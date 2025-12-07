@@ -58,7 +58,7 @@
                 <div class="alert alert-success">{{ session('status') }}</div>
             @endif
 
-            <form method="POST" action="{{ route('login') }}">
+            <form method="POST" action="{{ route('login.process') }}">
                 @csrf
 
                 {{-- Email --}}
