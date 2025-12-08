@@ -1,27 +1,27 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('pages.accounts.layout')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Thông tin tài khoản</title>
+@section('title', 'Thông tin khách hàng')
 
-    <link rel="stylesheet" href="{{ asset('css/header.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/footer.css') }}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+@section('account-content')
+<h3>Thông tin khách hàng</h3>
+<hr>
 
-    <!-- Swiper CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
-</head>
+<div class="row">
+    <div class="col-md-6 mb-3">
+        <strong>Họ và tên:</strong> {{ $user->name }}
+    </div>
+    <div class="col-md-6 mb-3">
+        <strong>Email:</strong> {{ $user->email }}
+    </div>
+    <div class="col-md-6 mb-3">
+        <strong>Số điện thoại:</strong> {{ $user->sdt ?? 'Chưa cập nhật' }}
+    </div>
+    <div class="col-md-6 mb-3">
+        <strong>Địa chỉ:</strong> {{ $user->diachi ?? 'Chưa cập nhật' }}
+    </div>
+</div>
 
-<body>
-
-@include('partials.header')
-<script src="{{ asset('js/header.js') }}"></script>
-<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-
-@include('partials.footer')
-
-
-</body>
-</html>
+<a href="{{ route('accounts.edit') }}" class="btn btn-primary mt-3">
+    Cập nhật thông tin
+</a>
+@endsection

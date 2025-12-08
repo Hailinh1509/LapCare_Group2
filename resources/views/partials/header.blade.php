@@ -145,7 +145,7 @@
                     </span>
 
                     <div class="user-dropdown">
-                        <a href="{{ route('account') }}">Tài khoản của tôi</a>
+                        <a href="{{ route('accounts.index') }}">Tài khoản của tôi</a>
                         <a href="#">Đổi mật khẩu</a>
 
                         <form action="{{ route('logout') }}" method="POST">

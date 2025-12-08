@@ -20,7 +20,14 @@ Route::get('/ve-chung-toi', [PageController::class, 'about'])->name('about');
 
 
 //HẢI LINH (TÀI KHOẢN) 
-Route::get('/account', function () { return view('pages.accounts.index'); })->name('account');
+use App\Http\Controllers\AccountController;
+Route::middleware(['auth'])->prefix('account')->name('accounts.')->group(function () {
+
+    Route::get('/', [AccountController::class, 'index'])->name('index');
+    Route::get('/edit', [AccountController::class, 'edit'])->name('edit');
+    Route::put('/update', [AccountController::class, 'update'])->name('update');
+    Route::get('/orders', [AccountController::class, 'orders'])->name('orders');
+});
 
 // Tin tức
 Route::get('/tin-tuc', [PageController::class, 'news'])->name('news.index');
