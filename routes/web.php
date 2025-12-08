@@ -22,16 +22,6 @@ Route::get('/ve-chung-toi', [PageController::class, 'about'])->name('about');
 //HẢI LINH (TÀI KHOẢN) 
 Route::get('/account', function () { return view('pages.accounts.index'); })->name('account');
 
-
-// Danh sách sản phẩm
-Route::get('/products', [ProductsController::class, 'index'])->name('products.list');
-
-// Chi tiết sản phẩm (VD: /products/5)
-Route::get('/products/{id}', [ProductsController::class, 'show'])->name('products.detail');
-
-// Trang sản phẩm
-Route::get('/san-pham', [PageController::class, 'products'])->name('products.index');
-
 // Tin tức
 Route::get('/tin-tuc', [PageController::class, 'news'])->name('news.index');
 
