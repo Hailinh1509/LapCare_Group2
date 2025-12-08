@@ -32,7 +32,7 @@ class SupplierController extends Controller
     public function store(Request $request)
 {
     $request->validate([
-        'mancc' => 'required|unique:nhacungcap,mancc',
+        'mancc'  => 'required|unique:nhacungcap,mancc|regex:/^NCC/',
         'tenncc' => 'required|string|max:255',
         'sdt' => ['nullable', 'regex:/^[0-9]{10}$/'],
         'gmail' => 'nullable|email|max:255',
@@ -40,11 +40,13 @@ class SupplierController extends Controller
     ], [
         'mancc.unique' => 'Mã nhà cung cấp đã tồn tại!',
         'mancc.required' => 'Mã nhà cung cấp không được để trống!',
+        'mancc.regex' => 'Mã NCC phải bắt đầu bằng "NCC".',
         'tenncc.required' => 'Tên nhà cung cấp không được để trống!',
         'sdt.regex' => 'Số điện thoại phải gồm đúng 10 chữ số!',
     ]);
 
     NhaCungCap::create($request->all());
+
     return redirect()->route('suppliers.index')
         ->with('success', 'Thêm nhà cung cấp thành công!');
 }
@@ -61,22 +63,21 @@ class SupplierController extends Controller
     public function update(Request $request, $mancc)
     {
         $request->validate([
-            'tenncc' => 'required|string|max:255',
+        'tenncc' => 'required|string|max:255',
 
-            // validate update
-            'sdt' => ['nullable', 'regex:/^[0-9]{10}$/'],
+        // validate update
+        'sdt' => ['nullable', 'regex:/^[0-9]{10}$/'],
 
-            'gmail' => 'nullable|email|max:255',
-            'diachi' => 'nullable|string|max:255',
-        ], [
-            'sdt.regex' => 'Số điện thoại phải gồm đúng 10 chữ số!',
-        ]);
+        'gmail' => 'nullable|email|max:255',
+        'diachi' => 'nullable|string|max:255',
+    ], [
+        'sdt.regex' => 'Số điện thoại phải gồm đúng 10 chữ số!',
+    ]);
 
         $ncc = NhaCungCap::findOrFail($mancc);
         $ncc->update($request->all());
 
-        return redirect()->route('suppliers.index')
-            ->with('success', 'Cập nhật nhà cung cấp thành công!');
+        return redirect()->route('suppliers.index')->with('success', 'Cập nhật thành công!');
     }
 
     // Xóa
