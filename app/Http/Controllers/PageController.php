@@ -35,6 +35,12 @@ class PageController extends Controller
     $credentials = $request->only('email', 'password');
 
     if (Auth::attempt($credentials, $request->filled('remember'))) {
+        // Check if user is admin
+        $user = Auth::user();
+        if ($user && $user->role === 'admin') {
+            return redirect()->route('admin.dashboard');
+        }
+        
         return redirect()->route('home.logged');
     }
 

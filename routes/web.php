@@ -69,7 +69,7 @@ Route::get('/quy-che-hoat-dong', [PageController::class, 'policy.rules'])->name(
 
 use App\Http\Controllers\DashboardController;
 
-Route::prefix('admin')->group(function () {
+Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
 
     Route::get('/dashboard', [DashboardController::class, 'index'])
         ->name('admin.dashboard');
@@ -85,7 +85,7 @@ Route::prefix('admin')->group(function () {
 
 use App\Http\Controllers\CategoryController;
 
-Route::prefix('admin')->group(function () {
+Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
 
     Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
     Route::post('/categories/search', [CategoryController::class, 'search'])->name('categories.search');
@@ -102,7 +102,7 @@ Route::prefix('admin')->group(function () {
 
 use App\Http\Controllers\AdminProductsController;
 
-Route::prefix('admin')->group(function () {
+Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
 
     Route::get('/products', [AdminProductsController::class, 'index'])->name('products.index');
     Route::get('/products/create', [AdminProductsController::class, 'create'])->name('products.create');
@@ -134,7 +134,7 @@ Route::middleware('auth')->group(function () {
 */
 
 use App\Http\Controllers\EmployeeController;
-    Route::prefix('admin')->group(function () {
+Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::get('/employees', [EmployeeController::class, 'index'])->name('employees.index');
     Route::get('/employees/create', [EmployeeController::class, 'create'])->name('employees.create');
     Route::post('/employees', [EmployeeController::class, 'store'])->name('employees.store');
@@ -142,21 +142,6 @@ use App\Http\Controllers\EmployeeController;
     Route::put('/employees/{id}', [EmployeeController::class, 'update'])->name('employees.update');
     Route::delete('/employees/{id}', [EmployeeController::class, 'destroy'])->name('employees.destroy');
     Route::get('/employees/search', [EmployeeController::class, 'search'])->name('employees.search');
-    
-    // Thêm nhân viên
-    Route::get('/employees/create', [EmployeeController::class, 'create'])->name('employees.create');
-    Route::post('/employees', [EmployeeController::class, 'store'])->name('employees.store');
-
-    // Sửa nhân viên
-    Route::get('/employees/{id}/edit', [EmployeeController::class, 'edit'])->name('employees.edit');
-    Route::put('/employees/{id}', [EmployeeController::class, 'update'])->name('employees.update');
-
-    // Xóa nhân viên
-    Route::delete('/employees/{id}', [EmployeeController::class, 'destroy'])->name('employees.destroy');
-
-    //Tìm kiếm nhân viên
-    Route::get('/employees/search', [EmployeeController::class, 'search'])->name('employees.search');
-
 });
 
 
@@ -168,13 +153,12 @@ use App\Http\Controllers\EmployeeController;
 
 use App\Http\Controllers\CustomersController;
 
-Route::prefix('admin')->group(function () {
-Route::get('/customers', [CustomersController::class, 'index'])->name('customers.index');
-Route::get('/customers/create', [CustomersController::class, 'create'])->name('customers.create');
-Route::get('/customers/{id}/edit', [CustomersController::class, 'edit'])->name('customers.edit');
-Route::delete('/customers/{id}', [CustomersController::class, 'destroy'])->name('customers.destroy');
-//Tìm kiếm khách hàng
-Route::get('/customers/search', [CustomersController::class, 'search'])->name('customers.search');
+Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
+    Route::get('/customers', [CustomersController::class, 'index'])->name('customers.index');
+    Route::get('/customers/create', [CustomersController::class, 'create'])->name('customers.create');
+    Route::get('/customers/{id}/edit', [CustomersController::class, 'edit'])->name('customers.edit');
+    Route::delete('/customers/{id}', [CustomersController::class, 'destroy'])->name('customers.destroy');
+    Route::get('/customers/search', [CustomersController::class, 'search'])->name('customers.search');
 });
 
 
@@ -187,7 +171,7 @@ Route::get('/customers/search', [CustomersController::class, 'search'])->name('c
 
 use App\Http\Controllers\ReviewController;
 
-Route::prefix('admin')->group(function () {
+Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::get('/reviews', [ReviewController::class, 'index'])->name('reviews.index');
 });
 
@@ -199,7 +183,7 @@ Route::prefix('admin')->group(function () {
 
 use App\Http\Controllers\OrderController;
 
-Route::prefix('admin')->group(function () {
+Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
 });
 
@@ -211,14 +195,20 @@ Route::prefix('admin')->group(function () {
 */
 use App\Http\Controllers\SupplierController;
 
-Route::prefix('admin')->group(function () {
+Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::get('/suppliers', [SupplierController::class, 'index'])->name('suppliers.index');
     Route::get('/suppliers/create', [SupplierController::class, 'create'])->name('suppliers.create');
     Route::post('/suppliers', [SupplierController::class, 'store'])->name('suppliers.store');
+<<<<<<< Updated upstream
 
     Route::get('/suppliers/{mancc}/edit', [SupplierController::class, 'edit'])->name('suppliers.edit');
     Route::put('/suppliers/{mancc}', [SupplierController::class, 'update'])->name('suppliers.update');
     Route::delete('/suppliers/{mancc}', [SupplierController::class, 'delete'])->name('suppliers.delete');
+=======
+    Route::get('/suppliers/{id}/edit', [SupplierController::class, 'edit'])->name('suppliers.edit');
+    Route::put('/suppliers/{id}', [SupplierController::class, 'update'])->name('suppliers.update');
+    Route::delete('/suppliers/{id}', [SupplierController::class, 'destroy'])->name('suppliers.destroy');
+>>>>>>> Stashed changes
 });
 
 
@@ -230,12 +220,10 @@ Route::prefix('admin')->group(function () {
 */
 use App\Http\Controllers\ImportOrderController;
 
-Route::prefix('admin')->group(function () {
+Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::get('/imports', [ImportOrderController::class, 'index'])->name('imports.index');
     Route::get('/imports/create', [ImportOrderController::class, 'create'])->name('imports.create');
     Route::post('/imports', [ImportOrderController::class, 'store'])->name('imports.store');
-
-    // CRUD đầy đủ (nếu muốn)
     Route::get('/imports/{id}/edit', [ImportOrderController::class, 'edit'])->name('imports.edit');
     Route::put('/imports/{id}', [ImportOrderController::class, 'update'])->name('imports.update');
     Route::delete('/imports/{id}', [ImportOrderController::class, 'destroy'])->name('imports.destroy');
