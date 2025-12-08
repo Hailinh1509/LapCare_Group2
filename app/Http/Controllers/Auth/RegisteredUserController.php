@@ -31,14 +31,24 @@ class RegisteredUserController extends Controller
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+
+            // Thêm 3 trường mới
+            'matk' => ['nullable', 'string', 'max:50'],
+            'sdt' => ['nullable', 'string', 'max:15'],
+            'diachi' => ['nullable', 'string', 'max:255'],
         ]);
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+
+            // Lưu vào database
+            'matk'   => $request->matk,
+            'sdt'    => $request->sdt,
+            'diachi' => $request->diachi,
         ]);
 
         event(new Registered($user));

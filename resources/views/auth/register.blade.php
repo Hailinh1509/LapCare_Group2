@@ -14,7 +14,7 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #f3eaff, #eaddff); /* pastel rất nhạt */
+            background: linear-gradient(135deg, #f3eaff, #eaddff);
             height: 100vh;
         }
         .register-card {
@@ -29,7 +29,7 @@
             padding-left: 42px;
             height: 48px;
             border-radius: 12px;
-            border: 1px solid #e3d8ff; /* tím pastel nhạt */
+            border: 1px solid #e3d8ff;
         }
         .input-icon {
             position: absolute;
@@ -37,10 +37,10 @@
             left: 12px;
             transform: translateY(-50%);
             font-size: 18px;
-            color: #b6a2e8;  /* tím pastel nhạt */
+            color: #b6a2e8;
         }
         .btn-gradient {
-            background: linear-gradient(135deg, #e3d3ff, #d7c7ff); /* nút tím nhạt */
+            background: linear-gradient(135deg, #e3d3ff, #d7c7ff);
             border: none;
             padding: 12px 20px;
             font-size: 16px;
@@ -85,7 +85,7 @@
         <form method="POST" action="{{ route('register') }}">
             @csrf
 
-            {{-- Name --}}
+            {{-- Họ tên --}}
             <div class="mb-3 position-relative">
                 <i class="input-icon bi bi-person"></i>
                 <input name="name" type="text" value="{{ old('name') }}" required
@@ -103,7 +103,34 @@
                 @error('email') <div class="invalid-feedback">{{ $message }}</div> @enderror
             </div>
 
-            {{-- Password --}}
+            {{-- Mã tài khoản --}}
+            <div class="mb-3 position-relative">
+                <i class="input-icon bi bi-hash"></i>
+                <input name="matk" type="text" value="{{ old('matk') }}"
+                       class="form-control @error('matk') is-invalid @enderror"
+                       placeholder="Mã tài khoản">
+                @error('matk') <div class="invalid-feedback">{{ $message }}</div> @enderror
+            </div>
+
+            {{-- Số điện thoại --}}
+            <div class="mb-3 position-relative">
+                <i class="input-icon bi bi-telephone"></i>
+                <input name="sdt" type="text" value="{{ old('sdt') }}"
+                       class="form-control @error('sdt') is-invalid @enderror"
+                       placeholder="Số điện thoại">
+                @error('sdt') <div class="invalid-feedback">{{ $message }}</div> @enderror
+            </div>
+
+            {{-- Địa chỉ --}}
+            <div class="mb-3 position-relative">
+                <i class="input-icon bi bi-geo-alt"></i>
+                <input name="diachi" type="text" value="{{ old('diachi') }}"
+                       class="form-control @error('diachi') is-invalid @enderror"
+                       placeholder="Địa chỉ">
+                @error('diachi') <div class="invalid-feedback">{{ $message }}</div> @enderror
+            </div>
+
+            {{-- Mật khẩu --}}
             <div class="mb-3 position-relative">
                 <i class="input-icon bi bi-lock"></i>
                 <input name="password" type="password" required
@@ -112,7 +139,7 @@
                 @error('password') <div class="invalid-feedback">{{ $message }}</div> @enderror
             </div>
 
-            {{-- Confirm password --}}
+            {{-- Xác nhận mật khẩu --}}
             <div class="mb-3 position-relative">
                 <i class="input-icon bi bi-lock-fill"></i>
                 <input name="password_confirmation" type="password" required
