@@ -30,19 +30,25 @@ class SupplierController extends Controller
 
     // Lưu nhà cung cấp mới
     public function store(Request $request)
-    {
-        $request->validate([
-            'mancc' => 'required|unique:nhacungcap',
-            'tenncc' => 'required',
-            'sdt' => 'nullable',
-            'gmail' => 'nullable|email',
-            'diachi' => 'nullable',
-        ]);
+{
+    $request->validate([
+        'mancc' => 'required|unique:nhacungcap,mancc',
+        'tenncc' => 'required|string|max:255',
+        'sdt' => ['nullable', 'regex:/^[0-9]{10}$/'],
+        'gmail' => 'nullable|email|max:255',
+        'diachi' => 'nullable|string|max:255',
+    ], [
+        'mancc.unique' => 'Mã nhà cung cấp đã tồn tại!',
+        'mancc.required' => 'Mã nhà cung cấp không được để trống!',
+        'tenncc.required' => 'Tên nhà cung cấp không được để trống!',
+        'sdt.regex' => 'Số điện thoại phải gồm đúng 10 chữ số!',
+    ]);
 
-        NhaCungCap::create($request->all());
+    NhaCungCap::create($request->all());
+    return redirect()->route('suppliers.index')
+        ->with('success', 'Thêm nhà cung cấp thành công!');
+}
 
-        return redirect()->route('suppliers.index')->with('success', 'Thêm nhà cung cấp thành công!');
-    }
 
     // Form sửa
     public function edit($mancc)
@@ -55,16 +61,22 @@ class SupplierController extends Controller
     public function update(Request $request, $mancc)
     {
         $request->validate([
-            'tenncc' => 'required',
-            'sdt' => 'nullable',
-            'gmail' => 'nullable|email',
-            'diachi' => 'nullable',
+            'tenncc' => 'required|string|max:255',
+
+            // validate update
+            'sdt' => ['nullable', 'regex:/^[0-9]{10}$/'],
+
+            'gmail' => 'nullable|email|max:255',
+            'diachi' => 'nullable|string|max:255',
+        ], [
+            'sdt.regex' => 'Số điện thoại phải gồm đúng 10 chữ số!',
         ]);
 
         $ncc = NhaCungCap::findOrFail($mancc);
         $ncc->update($request->all());
 
-        return redirect()->route('suppliers.index')->with('success', 'Cập nhật thành công!');
+        return redirect()->route('suppliers.index')
+            ->with('success', 'Cập nhật nhà cung cấp thành công!');
     }
 
     // Xóa
