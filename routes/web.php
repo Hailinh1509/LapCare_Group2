@@ -59,6 +59,22 @@ Route::get('/chinh-sach-bao-mat-thong-tin', [PageController::class, 'policy.priv
 Route::get('/chinh-sach-van-chuyen', [PageController::class, 'policy.delivery'])->name('policy.delivery');
 Route::get('/quy-che-hoat-dong', [PageController::class, 'policy.rules'])->name('policy.rules');
 
+
+
+
+/*
+|--------------------------------------------------------------------------
+| PROFILE
+|--------------------------------------------------------------------------
+*/
+
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+
 /*
 |--------------------------------------------------------------------------
 | ADMIN + DASHBOARD
