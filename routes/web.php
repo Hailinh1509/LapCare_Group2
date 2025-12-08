@@ -8,21 +8,29 @@ use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\ThanhtoanController;
 
+
 // Trang chủ (home page)
 Route::get('/', [HomeController::class, 'index'])->name('home');
 // Trang chủ cho người dùng đã đăng nhập
 Route::get('/home-logged', [HomeController::class, 'indexLogged'])->name('home.logged');
 
+
 // Trang "Về chúng tôi"
 Route::get('/ve-chung-toi', [PageController::class, 'about'])->name('about');
 
-//HẢI LINH (TÀI KHOẢN)
-Route::get('/account', function () {
-    return view('pages.accounts.index');
-})->name('account');
+
+//HẢI LINH (TÀI KHOẢN) 
+Route::get('/account', function () { return view('pages.accounts.index'); })->name('account');
 
 
+// Danh sách sản phẩm
+Route::get('/products', [ProductsController::class, 'index'])->name('products.list');
 
+// Chi tiết sản phẩm (VD: /products/5)
+Route::get('/products/{id}', [ProductsController::class, 'show'])->name('products.detail');
+
+// Trang sản phẩm
+Route::get('/san-pham', [PageController::class, 'products'])->name('products.index');
 
 // Tin tức
 Route::get('/tin-tuc', [PageController::class, 'news'])->name('news.index');
@@ -136,11 +144,19 @@ Route::middleware('auth')->group(function () {
 use App\Http\Controllers\EmployeeController;
 Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::get('/employees', [EmployeeController::class, 'index'])->name('employees.index');
+
+    // Thêm nhân viên
     Route::get('/employees/create', [EmployeeController::class, 'create'])->name('employees.create');
     Route::post('/employees', [EmployeeController::class, 'store'])->name('employees.store');
+
+    // Sửa nhân viên
     Route::get('/employees/{id}/edit', [EmployeeController::class, 'edit'])->name('employees.edit');
     Route::put('/employees/{id}', [EmployeeController::class, 'update'])->name('employees.update');
+
+    // Xóa nhân viên
     Route::delete('/employees/{id}', [EmployeeController::class, 'destroy'])->name('employees.destroy');
+
+    //Tìm kiếm nhân viên
     Route::get('/employees/search', [EmployeeController::class, 'search'])->name('employees.search');
 });
 
@@ -199,17 +215,12 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::get('/suppliers', [SupplierController::class, 'index'])->name('suppliers.index');
     Route::get('/suppliers/create', [SupplierController::class, 'create'])->name('suppliers.create');
     Route::post('/suppliers', [SupplierController::class, 'store'])->name('suppliers.store');
-<<<<<<< Updated upstream
 
     Route::get('/suppliers/{mancc}/edit', [SupplierController::class, 'edit'])->name('suppliers.edit');
     Route::put('/suppliers/{mancc}', [SupplierController::class, 'update'])->name('suppliers.update');
     Route::delete('/suppliers/{mancc}', [SupplierController::class, 'delete'])->name('suppliers.delete');
-=======
-    Route::get('/suppliers/{id}/edit', [SupplierController::class, 'edit'])->name('suppliers.edit');
-    Route::put('/suppliers/{id}', [SupplierController::class, 'update'])->name('suppliers.update');
-    Route::delete('/suppliers/{id}', [SupplierController::class, 'destroy'])->name('suppliers.destroy');
->>>>>>> Stashed changes
 });
+
 
 
 
