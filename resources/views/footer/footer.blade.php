@@ -24,7 +24,7 @@
         <h4>Kết nối</h4>
         <div class="social-icons">
           <a href="#"><img src="../images/facebook.png" alt="Facebook"></a>
-          <a href="#"><img src="../images/insta.png" alt=".."></a>
+     <!--     <a href="#"><img src="../images/insta.png" alt=".."></a>  -->
           <a href="#"><img src="../images/tiktok.png" alt="TIKTOK"></a>
           <a href="#"><img src="../images/zalo.png" alt="Zalo"></i></a>
         </div>
@@ -43,24 +43,23 @@
         </ul>
       </div>
 
-      <div class="footer-col KM">
-        <section class="promo-signup">
-          <h2>ĐĂNG KÝ NHẬN TIN KHUYẾN MÃI</h2>
-          <p>Nhận ngay voucher 10%</p>
-          <p class="note">Voucher sẽ được gửi sau 24h, chỉ áp dụng cho khách hàng mới</p>
-          <form>
-            <label for="email">Email</label>
-            <input type="email" id="email" placeholder="Nhập email của bạn" required />
-            <label for="phone">Số điện thoại</label>
-            <input type="tel" id="phone" placeholder="Nhập số điện thoại của bạn" required />
-            <label class="checkbox">
-              <input type="checkbox" required />
-              Tôi đồng ý với điều khoản của LAPCARE
-            </label>
-            <button type="submit">ĐĂNG KÝ NGAY</button>
-          </form>
-        </section>
-      </div>
+<div class="footer-col KM">
+  <div style="margin-top: 20px;">
+    <h4>Địa chỉ cửa hàng</h4>
+  
+<iframe 
+    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3724.377722465657!2d105.81645221540264!3d21.016319993579273!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135ab732d2f2e0b%3A0x1a16e6c6b6a6a1!2zMTMzIFAuIFRo4bqjaSBIw6AsIMSQ4buRbmcgxJDDoCwgSMOgIE7hu5lpLCBWaeG7h3QgTmFt!5e0!3m2!1svi!2s!4v1702130000000"
+    width="100%"
+    height="260"
+    style="border:0; border-radius:10px;"
+    allowfullscreen=""
+    loading="lazy"
+    referrerpolicy="no-referrer-when-downgrade">
+</iframe>
+
+    </div>
+</div>
+
     </div>
   </footer>
 </body>
