@@ -85,6 +85,7 @@
 
             
         <div class="card-button">
+            <!-- Thêm vào giỏ -->
              @auth
             <form action="{{ route('cart.add') }}" method="POST" class="form-add">
             @csrf
@@ -254,7 +255,7 @@
                     <div class="stars mr-2">
                         <p>
                             <span style="font-size:1.2em; font-weight:bold; color:#333;">
-                                {{ $rv->users->name ?? 'Người dùng' }}
+                                {{ $rv->User->name ?? 'Người dùng' }}
                             </span>
                             <span style="font-size:1em; color:#777;">
                                 {{ $rv->ngaytao ?? '' }}

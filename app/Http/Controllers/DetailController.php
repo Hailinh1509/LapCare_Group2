@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+
 use App\Models\Product;
 use App\Models\DanhGia;
 use App\Models\GioHang;
+use App\Models\Users;
 use Illuminate\Http\Request;
 
 class DetailController extends Controller
@@ -36,8 +38,13 @@ class DetailController extends Controller
             $reviewsQuery->where('rating', intval($filterStar));
         }
 
+
         // Phân trang
         $reviews = $reviewsQuery->paginate(5)->withQueryString();
+
+    $reviewsQuery = danhgia::where('masp', $masp)
+        ->with('user')
+        ->orderBy('ngaytao', 'desc');
 
         // ⭐ Thống kê rating
         $allReviews = DanhGia::where('masp', $masp)->get();
@@ -65,12 +72,12 @@ class DetailController extends Controller
         ));
     }
 
-    // ============================================
-    // ⭐ THÊM VÀO GIỎ HÀNG
-    // ============================================
-    public function addToCart(Request $request)
+
+    //Thêm sản phẩm vào giỏ
+        public function addToCart(Request $request)
+
     {
-        $product_id = $request->product_id;
+    $product_id = $request->product_id;
     $quantity = max(1, (int) $request->quantity);
 
     // Kiểm tra đăng nhập
@@ -130,6 +137,7 @@ class DetailController extends Controller
         ]);
 
         return redirect('/checkout');
+
     }
 
     // ============================================
@@ -152,5 +160,7 @@ class DetailController extends Controller
 
         return back()->with('success', 'Đánh giá của bạn đã được gửi!');
     }
-}
+
+    }
+
 
