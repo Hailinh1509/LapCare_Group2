@@ -16,7 +16,7 @@
 </head>
 
 <body>
-
+ 
 @include('header.header')
 
 <div class="container">
@@ -145,7 +145,8 @@
 
 
    
-    <form id="filterForm" method="GET" action="{{ route('products.index') }}">
+    <form id="filterForm" method="GET" action="{{ route('products.list') }}">
+
       {{-- Giữ các tham số sort + page nếu cần --}}
       <input type="hidden" name="sort" value="{{ request('sort') }}">
 
@@ -258,8 +259,15 @@
             <div class="discount-badge">Giảm {{ $km }}%</div>
           @endif
 
-          <img src="{{ asset($sp->hinhanh) }}" alt="">
-          <h5>{{ $sp->tensp }}</h5>
+          <a href="{{ route('products.detail', $sp->masp) }}">
+    <img src="{{ asset($sp->hinhanh) }}" alt="">
+</a>
+
+<a href="{{ route('products.detail', $sp->masp) }}" style="text-decoration:none; color:inherit;">
+    <h5>{{ $sp->tensp }}</h5>
+</a>
+
+
           <p class="brand">Hãng: {{ $sp->hang }}</p>
 
           <p class="price">

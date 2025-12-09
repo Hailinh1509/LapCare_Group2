@@ -1,28 +1,37 @@
 <?php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Models\TaiKhoan;
-use App\Models\sanpham;
 
-class danhgia extends Model
+class DanhGia extends Model
 {
-    protected $table = 'danhgia';
-    protected $primaryKey = 'id';
-    public $timestamps = false;
+    protected $table = 'danhgia';        // tên bảng
+    protected $primaryKey = 'id';        // khóa chính
+    
+    public $timestamps = false;          // bảng không có created_at / updated_at
+    
     protected $fillable = [
-        'matk', 'masp', 'noidung', 'rating'
+        'matk',
+        'masp',
+        'noidung',
+        'rating'
     ];
 
+    // ============================
+    // QUAN HỆ: Tài khoản đánh giá
+    // ============================
     public function taikhoan()
     {
-        //return $this->belongsTo(TaiKhoan::class, 'matk', 'matk');
         return $this->belongsTo(TaiKhoan::class, 'matk', 'matk')
-        ->withDefault(); 
+                    ->withDefault();     // tránh lỗi khi user bị xóa
     }
 
-    public function sanpham()
+    // ============================
+    // QUAN HỆ: Sản phẩm được đánh giá
+    // ============================
+    public function product()
     {
-        return $this->belongsTo(sanpham::class, 'masp', 'masp');
+        return $this->belongsTo(Product::class, 'masp', 'masp');
     }
 }

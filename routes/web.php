@@ -133,6 +133,16 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::delete('/products/{id}', [AdminProductsController::class, 'delete'])->name('products.delete');
 
 });
+/*
+|--------------------------------------------------------------------------
+| CUSTOMERS PRODUCTS
+|--------------------------------------------------------------------------
+*/
+// Trang danh sách sản phẩm
+Route::get('/products', [ProductsController::class, 'index'])->name('products.list');
+//Trang chi tiết sản phẩm
+use App\Http\Controllers\DetailController;
+Route::get('/products/{masp}', [DetailController::class, 'detail'])->name('products.detail');
 
 
 

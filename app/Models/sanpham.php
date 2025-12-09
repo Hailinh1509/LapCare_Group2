@@ -1,4 +1,5 @@
 <?php
+//file này là bình tĩnh đừng xoá! QUỲNH ANH đang xem xét
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
