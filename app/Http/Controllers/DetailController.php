@@ -4,43 +4,41 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use App\Models\DanhGia;
-
 use Illuminate\Http\Request;
 
 class DetailController extends Controller
 {
     // ============================================
-    // ⭐ TRANG CHI TIẾT SẢN PHẨM: /products/{masp}
+    // ⭐ TRANG CHI TIẾT SẢN PHẨM
     // ============================================
     public function detail($masp, Request $request)
     {
-        // Lấy 1 sản phẩm theo mã
+        // Lấy sản phẩm theo mã
         $product = Product::where('masp', $masp)->firstOrFail();
 
-        // Lấy sản phẩm liên quan (cùng prefix mã loại)
+        // Sản phẩm liên quan
         $prefix = substr($product->maloaisp, 0, 2);
-
         $related = Product::where('masp', '!=', $masp)
             ->whereRaw("LEFT(maloaisp, 2) = '$prefix'")
             ->inRandomOrder()
             ->limit(4)
             ->get();
 
-        // ⭐ LỌC THEO SỐ SAO
-        $filterStar = $request->query('star'); 
+        // ⭐ Lọc theo số sao
+        $filterStar = $request->query('star');
 
         $reviewsQuery = DanhGia::where('masp', $masp)
             ->with('taikhoan')
             ->orderBy('ngaytao', 'desc');
 
-        if (!empty($filterStar)) {
-            $reviewsQuery->where('rating', $filterStar);
+        if (!empty($filterStar) && $filterStar !== 'all') {
+            $reviewsQuery->where('rating', intval($filterStar));
         }
 
-        // ⭐ PHÂN TRANG REVIEW
+        // Phân trang
         $reviews = $reviewsQuery->paginate(5)->withQueryString();
 
-        // ⭐ THỐNG KÊ ĐÁNH GIÁ (dựa theo toàn bộ đánh giá)
+        // ⭐ Thống kê rating
         $allReviews = DanhGia::where('masp', $masp)->get();
 
         $avgRating = round($allReviews->avg('rating'), 1);
@@ -67,7 +65,7 @@ class DetailController extends Controller
     }
 
     // ============================================
-    // ⭐ THÊM SẢN PHẨM VÀO GIỎ
+    // ⭐ THÊM VÀO GIỎ HÀNG
     // ============================================
     public function addToCart(Request $request)
     {
@@ -76,12 +74,14 @@ class DetailController extends Controller
 
         $cart = session()->get('cart', []);
 
+        // Nếu sản phẩm đã có trong giỏ
         if (isset($cart[$product_id])) {
             $cart[$product_id]['quantity'] += $quantity;
         } else {
+
             $product = Product::where('masp', $product_id)->first();
             if (!$product) {
-                return redirect()->back()->with('error', 'Sản phẩm không tồn tại!');
+                return back()->with('error', 'Sản phẩm không tồn tại!');
             }
 
             $cart[$product_id] = [
@@ -94,7 +94,7 @@ class DetailController extends Controller
         }
 
         session()->put('cart', $cart);
-        return redirect()->back()->with('success', 'Đã thêm vào giỏ hàng!');
+        return back()->with('success', 'Đã thêm vào giỏ hàng!');
     }
 
     // ============================================
@@ -108,7 +108,7 @@ class DetailController extends Controller
         $product = Product::where('masp', $product_id)->first();
 
         if (!$product) {
-            return redirect()->back()->with('error', 'Sản phẩm không tồn tại!');
+            return back()->with('error', 'Sản phẩm không tồn tại!');
         }
 
         session()->put('buy_now', [
@@ -120,7 +120,7 @@ class DetailController extends Controller
     }
 
     // ============================================
-    // ⭐ THÊM ĐÁNH GIÁ
+    // ⭐ GỬI ĐÁNH GIÁ
     // ============================================
     public function addReview(Request $request, $masp)
     {
@@ -140,3 +140,4 @@ class DetailController extends Controller
         return back()->with('success', 'Đánh giá của bạn đã được gửi!');
     }
 }
+

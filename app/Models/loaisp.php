@@ -8,10 +8,12 @@ class loaisp extends Model
     protected $table = 'loaisp';
     protected $primaryKey = 'maloaisp';
     public $timestamps = false;
+    protected $keyType = 'string';
     protected $fillable = [
         'maloaisp',
         'tenloaisp',
-        'ngaytao'
+        'ngaytao', 
+        'ngaysua'
     ];
     public function loaisp()
 {

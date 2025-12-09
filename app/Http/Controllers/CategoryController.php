@@ -75,5 +75,21 @@ public function create()
         return redirect()->route('categories.index')
                          ->with('success', 'Thêm danh mục thành công!');
     }
+    public function edit($maloaisp)
+{
+    $category = loaisp::where('maloaisp', $maloaisp)->firstOrFail();
+    return view('pages.categories.update', compact('category'));
+}
+    public function update(Request $request, $maloaisp)
+{
+    $category = loaisp::where('maloaisp', $maloaisp)->firstOrFail();
+
+    $category->tenloaisp = $request->tenloaisp;
+    $category->ngaysua = now();
+    $category->save();
+
+    return redirect()->route('categories.index')->with('success', 'Cập nhật thành công!');
+}
+
 }
 
