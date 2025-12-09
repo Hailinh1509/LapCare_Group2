@@ -126,7 +126,7 @@
 
             <!-- Right actions -->
             {{-- Giỏ hàng --}}
-            <a href="{{ route('cart') }}" class="action">
+            <a href="{{ route('cart.index') }}" class="action">
                 <svg viewBox="0 0 21 21" fill="currentColor">
                     <path d="M7 18a2 2 0 104 0 2 2 0 00-4 0zm7 0a2 2 0 104 0 2 2 0 00-4 0zM6 6h14l-2 7H8zM4 4h2l1 4h12v2H8l-2 7H4z"/>
                 </svg>

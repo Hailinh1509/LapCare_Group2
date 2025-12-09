@@ -85,14 +85,18 @@
 
             
         <div class="card-button">
-            <!-- Thêm vào giỏ -->
+             @auth
             <form action="{{ route('cart.add') }}" method="POST" class="form-add">
-                @csrf
-                <input type="hidden" name="product_id" value="{{ $product->masp }}">
-                <input type="hidden" id="cart_qty" name="quantity">
-                <button type="submit" class="btn-add-cart">Thêm vào giỏ</button>
-            </form>
-
+            @csrf
+            <input type="hidden" name="product_id" value="{{ $product->masp }}">
+            <input type="hidden" id="cart_qty" name="quantity" value="1">
+            <button type="submit" class="btn-add-cart">Thêm vào giỏ</button>
+        </form>
+    @else
+        <a href="{{ route('login') }}" class="btn-add-cart">
+            Đăng nhập để thêm vào giỏ
+        </a>
+    @endauth
             <!-- Mua ngay -->
             <form action="{{ route('buy.now') }}" method="POST" class="form-buy">
                 @csrf
@@ -250,7 +254,7 @@
                     <div class="stars mr-2">
                         <p>
                             <span style="font-size:1.2em; font-weight:bold; color:#333;">
-                                {{ $rv->taikhoan->tentk ?? 'Người dùng' }}
+                                {{ $rv->users->name ?? 'Người dùng' }}
                             </span>
                             <span style="font-size:1em; color:#777;">
                                 {{ $rv->ngaytao ?? '' }}

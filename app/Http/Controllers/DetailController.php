@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use App\Models\DanhGia;
+use App\Models\GioHang;
 use Illuminate\Http\Request;
 
 class DetailController extends Controller
@@ -70,31 +71,43 @@ class DetailController extends Controller
     public function addToCart(Request $request)
     {
         $product_id = $request->product_id;
-        $quantity = max(1, (int) $request->quantity);
+    $quantity = max(1, (int) $request->quantity);
 
-        $cart = session()->get('cart', []);
+    // Kiểm tra đăng nhập
+    $user = auth()->user();
+    if (!$user) {
+        return redirect()->route('login');
+    }
 
-        // Nếu sản phẩm đã có trong giỏ
-        if (isset($cart[$product_id])) {
-            $cart[$product_id]['quantity'] += $quantity;
-        } else {
+    // Kiểm tra sản phẩm có tồn tại
+    $product = Product::where('masp', $product_id)->first();
+    if (!$product) {
+        return back()->with('error', 'Sản phẩm không tồn tại!');
+    }
 
-            $product = Product::where('masp', $product_id)->first();
-            if (!$product) {
-                return back()->with('error', 'Sản phẩm không tồn tại!');
-            }
+    // Kiểm tra sản phẩm đã trong giỏ chưa
+    $existing = \App\Models\GioHang::where('matk', $user->id)   // hoặc $user->matk nếu cột tên khác
+                ->where('masp', $product_id)
+                ->first();
 
-            $cart[$product_id] = [
-                'masp' => $product->masp,
-                'tensp' => $product->tensp,
-                'gia' => $product->giasp,
-                'hinhanh' => $product->hinhanh,
-                'quantity' => $quantity
-            ];
-        }
+    if ($existing) {
+        // Nếu đã có → tăng số lượng
+        $existing->soluong += $quantity;
+        $existing->save();
 
-        session()->put('cart', $cart);
-        return back()->with('success', 'Đã thêm vào giỏ hàng!');
+        return back()->with('success', 'Đã tăng số lượng sản phẩm trong giỏ hàng!');
+    }
+
+    // Nếu chưa có → thêm mới
+    \App\Models\GioHang::create([
+        'matk' => $user->id,  // hoặc tên cột tương ứng
+        'masp' => $product_id,
+        'soluong' => $quantity,
+        'ngaychon' => now(),
+    ]);
+
+    // Lần đầu thêm → chuyển sang giỏ hàng
+    return redirect('/cart')->with('success', 'Đã thêm sản phẩm vào giỏ hàng!');
     }
 
     // ============================================

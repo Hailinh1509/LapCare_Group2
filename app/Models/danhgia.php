@@ -9,7 +9,7 @@ class DanhGia extends Model
     protected $table = 'danhgia';        // tên bảng
     protected $primaryKey = 'id';        // khóa chính
     
-    public $timestamps = false;          // bảng không có created_at / updated_at
+    public $timestamps = false;          
     
     protected $fillable = [
         'matk',
@@ -23,7 +23,7 @@ class DanhGia extends Model
     // ============================
     public function taikhoan()
     {
-        return $this->belongsTo(TaiKhoan::class, 'matk', 'matk')
+        return $this->belongsTo(User::class, 'matk', 'id')
                     ->withDefault();     // tránh lỗi khi user bị xóa
     }
 

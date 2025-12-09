@@ -36,7 +36,11 @@ Route::get('/tin-tuc', [PageController::class, 'news'])->name('news.index');
 Route::get('/lien-he', [PageController::class, 'contact'])->name('contact');
 
 // Giỏ hàng
-Route::get('/gio-hang', [PageController::class, 'cart'])->name('cart');
+use App\Http\Controllers\CartController;
+Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+Route::post('/cart/update', [CartController::class, 'update'])->name('cart.update');
+Route::get('/cart/remove/{masp}', [CartController::class, 'remove'])->name('cart.remove');
+Route::get('/cart/clear', [CartController::class, 'clear'])->name('cart.clear');
 
 // Trang đăng nhập
 Route::get('/dang-nhap', [PageController::class, 'login'])->name('login');
@@ -57,6 +61,7 @@ Route::get('/thanh-toan/{masp}', [ThanhtoanController::class, 'show'])
 
 Route::post('/thanh-toan/{masp}', [ThanhtoanController::class, 'process'])
     ->name('thanhtoan.process');
+    
     
 /*
 Route::get('/chinh-sach-giao-hang-thanh-toan', [PageController::class, 'policyShipping'])->name('policy.shipping');
@@ -143,8 +148,16 @@ Route::get('/products', [ProductsController::class, 'index'])->name('products.li
 //Trang chi tiết sản phẩm
 use App\Http\Controllers\DetailController;
 Route::get('/products/{masp}', [DetailController::class, 'detail'])->name('products.detail');
+// Thêm vào giỏ hàng
+Route::post('/cart/add', [DetailController::class, 'addToCart'])
+    ->middleware('auth')
+    ->name('cart.add');
 
+// Mua ngay
+Route::post('/buy-now', [DetailController::class, 'buyNow'])->name('buy.now');
 
+// Gửi đánh giá
+Route::post('/product/{masp}/review', [DetailController::class, 'addReview'])->name('product.review');
 
 
 /*
