@@ -34,12 +34,12 @@
       <div class="footer-col"><BR>
         <h4>Chính sách</h4>
         <ul>
-          <li><a href="#">Giao hàng & Thanh toán</a></li>
-          <li><a href="#">Chính sách bảo hành</a></li>
-          <li><a href="#">Chính sách đổi trả</a></li>
-          <li><a href="#">Chính sách bảo mật thông tin</a></li>
+          <li><a href="{{ route('policy.ShipPay') }}">Giao hàng & Thanh toán</a></li>
+          <li><a href="{{ route('policy.warranty') }}">Chính sách bảo hành</a></li>
+          <li><a href="{{ route('policy.returns') }}">Chính sách đổi trả</a></li>
+          <li><a href="{{ route('policy.privacy') }}">Chính sách bảo mật thông tin</a></li>
           <li><a href="#">Chính sách vận chuyển</a></li>
-          <li><a href="#">Quy chế hoạt động</a></li>
+          <li><a href="{{ route('policy.operation') }}">Quy chế hoạt động</a></li>
         </ul>
       </div>
 

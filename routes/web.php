@@ -58,7 +58,7 @@ Route::get('/thanh-toan/{masp}', [ThanhtoanController::class, 'show'])
 Route::post('/thanh-toan/{masp}', [ThanhtoanController::class, 'process'])
     ->name('thanhtoan.process');
     
-
+/*
 Route::get('/chinh-sach-giao-hang-thanh-toan', [PageController::class, 'policyShipping'])->name('policy.shipping');
 Route::get('/chinh-sach-bao-hanh', [PageController::class, 'policy.warranty'])->name('policy.warranty');
 Route::get('/chinh-sach-doi-tra', [PageController::class, 'policy.return'])->name('policy.return');
@@ -66,7 +66,7 @@ Route::get('/chinh-sach-bao-mat-thong-tin', [PageController::class, 'policy.priv
 Route::get('/chinh-sach-van-chuyen', [PageController::class, 'policy.delivery'])->name('policy.delivery');
 Route::get('/quy-che-hoat-dong', [PageController::class, 'policy.rules'])->name('policy.rules');
 
-
+*/
 
 
 /*
@@ -188,7 +188,34 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::delete('/customers/{id}', [CustomersController::class, 'destroy'])->name('customers.destroy');
     Route::get('/customers/search', [CustomersController::class, 'search'])->name('customers.search');
 });
+/*
+|--------------------------------------------------------------------------
+| policy page
+|--------------------------------------------------------------------------
+*/
+Route::get('/policies/ShipPay', function () {
+    return view('policies.ShipPay');
+})->name('policy.ShipPay');
 
+Route::get('/policies/warranty', function () {
+    return view('policies.warranty');
+})->name('policy.warranty');
+
+Route::get('/policies/returns', function () {
+    return view('policies.returns');
+})->name('policy.returns');
+
+Route::get('/policies/privacy', function () {
+    return view('policies.privacy');
+})->name('policy.privacy');
+/*
+Route::get('/policies/delivery', function () {
+    return view('policies.delivery');
+})->name('policy.delivery');
+*/
+Route::get('/policies/operation-regulation', function () {
+    return view('policies.operation');
+})->name('policy.operation');
 
 
 /*
