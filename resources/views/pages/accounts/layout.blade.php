@@ -21,9 +21,9 @@
   }
 
   .account-sidebar .list-group-item.active {
-  background: #bd50b2ff; /* màu nền mục hiện tại */
+  background: #4B0082; /* màu nền mục hiện tại */
   color: #fff;          /* chữ trắng nổi bật */
-  border-left-color: #6f2e66; /* viền bên trái */
+  border-left-color: #a9d3f7ff; /* viền bên trái */
 }
 
   .account-sidebar .list-group-item:hover {
@@ -54,7 +54,7 @@
   @include('partials.header')
 
   <div class="account-main-wrapper">
-    <div class="row account-wrapper-row">
+    <div class="row account-wrapper-row g-1">
       <div class="col-md-3">
         <div class="account-sidebar account-sidebar-sticky">
           @include('pages.accounts.sidebar')
@@ -71,5 +71,8 @@
 
   @include('partials.footer')
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+  @yield('scripts')
+
 </body>
 </html>

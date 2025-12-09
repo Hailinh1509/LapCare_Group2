@@ -3,17 +3,70 @@
 @section('title', 'Cập nhật thông tin')
 
 @section('account-content')
-<h3>Cập nhật thông tin khách hàng</h3>
-<hr>
 
-{{-- Hiển thị thông báo success --}}
+<style>
+    /* Tiêu đề */
+    .account-title {
+        font-size: 22px;
+        font-weight: 700;
+        color: #4B0082;
+        margin-bottom: 20px;
+        letter-spacing: 1px;
+    }
+
+    /* Nhãn label */
+    .form-label {
+        font-weight: 600;
+        color: #4B0082;
+    }
+
+    /* Input */
+    .form-control {
+        border-radius: 8px;
+        padding: 10px 12px;
+        border: 1px solid #ccc;
+    }
+
+    .form-control:focus {
+        border-color: #4B0082;
+        box-shadow: 0 0 4px rgba(75, 0, 130, 0.4);
+    }
+
+    /* Nút */
+    .btn-back {
+        background-color: #6c757d !important;
+        color: #fff !important;
+        border: none !important;
+        padding: 8px 18px;
+        font-weight: 600;
+        border-radius: 6px;
+    }
+
+    .btn-back:hover {
+        background-color: #5a6268 !important;
+    }
+
+    .btn-save {
+        background-color: #9a4b91ff !important;
+        color: #fff !important;
+        border: none !important;
+        padding: 8px 18px;
+        font-weight: 600;
+        border-radius: 6px;
+    }
+
+    .btn-save:hover {
+        background-color: #803d79 !important;
+    }
+</style>
+
+<h3 class="account-title">Cập Nhật Thông Tin Khách Hàng</h3>
+
+{{-- Thông báo chỉ hiển thị ở edit --}}
 @if(session('success'))
-    <div class="alert alert-success">
-        {{ session('success') }}
-    </div>
+    <div class="alert alert-success">{{ session('success') }}</div>
 @endif
 
-{{-- Hiển thị thông báo lỗi validation --}}
 @if($errors->any())
     <div class="alert alert-danger">
         <ul class="mb-0">
@@ -24,35 +77,74 @@
     </div>
 @endif
 
-<form action="{{ route('accounts.update') }}" method="POST">
+<form action="{{ route('accounts.update') }}" method="POST" id="updateForm">
     @csrf
-    @method('PUT')
 
     <div class="mb-3">
-        <label for="name" class="form-label">Họ và tên</label>
-        <input type="text" class="form-control" id="name" name="name" 
+        <label class="form-label">Họ và tên</label>
+        <input type="text" class="form-control" name="name"
                value="{{ old('name', $user->name) }}" required>
     </div>
 
     <div class="mb-3">
-        <label for="email" class="form-label">Email</label>
-        <input type="email" class="form-control" id="email" name="email" 
+        <label class="form-label">Email</label>
+        <input type="email" class="form-control" name="email"
                value="{{ old('email', $user->email) }}" required>
     </div>
 
     <div class="mb-3">
-        <label for="sdt" class="form-label">Số điện thoại</label>
-        <input type="text" class="form-control" id="sdt" name="sdt" 
-               value="{{ old('sdt', $user->sdt) }}">
+        <label class="form-label">Số điện thoại</label>
+        <input type="text" class="form-control" name="sdt"
+               value="{{ old('sdt', $user->sdt) }}"
+               maxlength="10"
+               pattern="[0-9]{10}"
+               title="Số điện thoại phải đúng 10 chữ số">
     </div>
 
     <div class="mb-3">
-        <label for="diachi" class="form-label">Địa chỉ</label>
-        <input type="text" class="form-control" id="diachi" name="diachi" 
+        <label class="form-label">Địa chỉ</label>
+        <input type="text" class="form-control" name="diachi"
                value="{{ old('diachi', $user->diachi) }}">
     </div>
 
-    <button type="submit" class="btn btn-primary">Cập nhật</button>
-    <a href="{{ route('accounts.index') }}" class="btn btn-secondary">Quay lại</a>
+    <div class="d-flex justify-content-between mt-4">
+        <a href="{{ route('accounts.index') }}" class="btn btn-back">
+            Quay lại
+        </a>
+
+        <button type="submit" class="btn btn-save">
+            Cập nhật
+        </button>
+    </div>
 </form>
+
 @endsection
+
+@push('scripts')
+<script>
+    let formIsDirty = false;
+
+    // Theo dõi thay đổi form
+    document.querySelectorAll("#updateForm input, #updateForm textarea").forEach(input => {
+        input.addEventListener("input", () => formIsDirty = true);
+    });
+
+    // Cảnh báo rời trang nếu có thay đổi
+    window.addEventListener("beforeunload", function (e) {
+        if (formIsDirty) {
+            e.preventDefault();
+            e.returnValue = "";
+        }
+    });
+
+    // Khi submit, bỏ flag
+    document.getElementById("updateForm").addEventListener("submit", () => formIsDirty = false);
+
+    // Xử lý nút back
+    document.querySelector(".btn-back").addEventListener("click", function (e) {
+        if (formIsDirty && !confirm("Bạn có thay đổi chưa lưu. Bạn có muốn rời trang?")) {
+            e.preventDefault();
+        }
+    });
+</script>
+@endpush
