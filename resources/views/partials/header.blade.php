@@ -79,7 +79,7 @@
 
             {{-- Sản phẩm --}}
             <div class="danhmuc">
-                <a href="{{ route('products.index') }}" class="action">
+                <a href="{{ route('products.list') }}" class="action">
                     <svg viewBox="0 0 24 24" fill="currentColor">
                         <path d="M3 6h18v2H3zM3 11h18v2H3zM3 16h18v2H3z"/>
                     </svg>

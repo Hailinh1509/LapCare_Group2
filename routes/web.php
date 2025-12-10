@@ -147,7 +147,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
 |--------------------------------------------------------------------------
 */
 // Trang danh sách sản phẩm
-Route::get('/products', [ProductsController::class, 'index'])->name('products.index');
+Route::get('/products', [ProductsController::class, 'index'])->name('products.list');
 //Trang chi tiết sản phẩm
 use App\Http\Controllers\DetailController;
 Route::get('/products/{masp}', [DetailController::class, 'detail'])->name('products.detail');
