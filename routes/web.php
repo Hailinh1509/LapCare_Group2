@@ -179,7 +179,7 @@ Route::post('/buy-now', [DetailController::class, 'buyNow'])->name('buy.now');
 // Gửi đánh giá
 Route::post('/product/{masp}/review', [DetailController::class, 'addReview'])->name('product.review');
 
-
+Route::post('/buy-now/{masp}', [ThanhtoanController::class, 'show'])->name('buy.now');
 
 
 

@@ -344,7 +344,7 @@
                                 </p>
 
                                 <div class="mt-auto d-flex gap-2">
-                                    <a href="product.php?masp={{ urlencode($p->masp) }}"
+                                    <a href="{{ route('products.detail', ['masp' => $p->masp]) }}"
                                        class="btn btn-outline-secondary btn-sm flex-grow-1 btn-detail-home">
                                         Chi tiết
                                     </a>

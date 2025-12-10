@@ -99,10 +99,7 @@
         </a>
     @endauth
             <!-- Mua ngay -->
-            <form action="{{ route('buy.now') }}" method="POST" class="form-buy">
-                @csrf
-                <input type="hidden" name="product_id" value="{{ $product->masp }}">
-                <input type="hidden" id="buy_qty" name="quantity">
+            <form action="{{ route('thanhtoan.show', ['masp' => $product->masp]) }}" method="GET" class="form-buy">
                 <button type="submit" class="btn-buy-now">Mua ngay</button>
             </form>
         </div>
