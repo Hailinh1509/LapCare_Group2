@@ -145,7 +145,7 @@
 
 
    
-    <form id="filterForm" method="GET" action="{{ route('products.list') }}">
+    <form id="filterForm" method="GET" action="{{ route('products.index') }}">
 
       {{-- Giữ các tham số sort + page nếu cần --}}
       <input type="hidden" name="sort" value="{{ request('sort') }}">
