@@ -60,12 +60,12 @@
     <thead>
         <tr>
             <th>Mã KH</th>
-            <th>Tên</th>
+            <th>Họ và Tên</th>
             <th>SDT</th>
             <th>Email</th>
             <th>Địa chỉ</th>
          
-            <th width="120">Thao tác</th>
+            
         </tr>
     </thead>
 
@@ -73,30 +73,15 @@
     @foreach($customers as $cus)
     <tr>
         <td>{{ $cus->matk }}</td>
-        <td>{{ $cus->tentk }}</td>
+        <td>{{ $cus->name }}</td>
         <td>{{ $cus->sdt }}</td>
-        <td>{{ $cus->gmail }}</td>
+        <td>{{ $cus->email }}</td>
         <td>{{ $cus->diachi }}</td>
         
         
-
+ 
                 
-                <td class="text-center">
-                    <a href="{{ route('customers.edit', $cus->matk) }}" class="btn btn-warning btn-sm">
-                        <i class="fa fa-edit"></i>
-                    </a>
 
-                    <form action="{{ route('customers.destroy', $cus->matk) }}"
-                          method="POST" 
-                          style="display:inline;">
-                        @csrf
-                        @method('DELETE')
-                        <button onclick="return confirm('Bạn chắc chắn muốn xoá?')" 
-                                class="btn btn-danger btn-sm">
-                            <i class="fa fa-trash"></i>
-                        </button>
-                    </form>
-                </td>
             </tr>
             @endforeach
         </tbody>
