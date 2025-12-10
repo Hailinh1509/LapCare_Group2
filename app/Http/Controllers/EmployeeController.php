@@ -2,63 +2,103 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Nhanvien;
-use App\Models\VaiTro;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class EmployeeController extends Controller
 {
+    /** Danh sách nhân viên */
     public function index()
     {
-        $employees = Nhanvien::with('vaitro')->get();
-        return view('pages.employees.employeesAmin', compact('employees'),
-        ['title' => 'Tài khoản nhân viên']);
+        $employees = User::where('role', 'admin')->get();
+
+        return view('pages.employees.employeesAmin', compact('employees'), [
+            'title' => 'Danh sách nhân viên'
+        ]);
     }
 
+    /** Form thêm nhân viên */
     public function create()
     {
-        $roles = VaiTro::all();  // <-- QUAN TRỌNG!!!
-        return view('pages.employees.AddEmployeesAdmin', compact('roles'));
+        return view('pages.employees.AddEmployeesAdmin');
     }
 
+    /** Lưu nhân viên mới */
     public function store(Request $request)
     {
-        Nhanvien::create($request->all());
-        return redirect()->route('employees.index')->with('success', 'Thêm thành công');
+        $request->validate([
+            'name' => 'required',
+            'email' => 'required|email|unique:users',
+            'password' => 'required|min:5',
+            'sdt' => 'required',
+            'diachi' => 'required',
+        ]);
+
+        User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'sdt' => $request->sdt,
+            'diachi' => $request->diachi,
+            'role' => 'admin'  // Gán mặc định là NHÂN VIÊN
+        ]);
+
+        return redirect()->route('employees.index')->with('success', 'Thêm nhân viên thành công!');
     }
 
+    /** Form sửa nhân viên */
     public function edit($id)
     {
-        $emp = Nhanvien::findOrFail($id);
-        $roles = VaiTro::all();  // để chọn chức vụ khi edit
-        return view('pages.employees.UpdateEmployeesAdmin', compact('emp', 'roles'));
+        $emp = User::findOrFail($id);
+        return view('pages.employees.UpdateEmployeesAdmin', compact('emp'));
     }
 
+    /** Lưu dữ liệu đã sửa */
     public function update(Request $request, $id)
     {
-        $emp = Nhanvien::findOrFail($id);
-        $emp->update($request->all());
+        $emp = User::findOrFail($id);
 
-        return redirect()->route('employees.index')->with('success', 'Cập nhật thành công');
+        $request->validate([
+            'name' => 'required',
+            'sdt' => 'required',
+            'diachi' => 'required',
+            'email' => 'required|email|unique:users,email,' . $id,
+        ]);
+
+        // Nếu người dùng nhập mật khẩu mới → mã hóa lại
+        if ($request->password) {
+            $emp->password = Hash::make($request->password);
+        }
+
+        $emp->update([
+            'name' => $request->name,
+            'email' => $request->email,
+            'sdt' => $request->sdt,
+            'diachi' => $request->diachi
+        ]);
+
+        return redirect()->route('employees.index')->with('success', 'Cập nhật thành công!');
     }
 
+    /** Xóa nhân viên */
     public function destroy($id)
     {
-        Nhanvien::destroy($id);
-        return redirect()->route('employees.index')->with('success', 'Xóa thành công');
+        User::destroy($id);
+        return redirect()->route('employees.index')->with('success', 'Xóa thành công!');
     }
+
+    /** Tìm kiếm nhân viên */
     public function search(Request $request)
-{
-    $keyword = strtolower($request->input('keyword'));
+    {
+        $keyword = strtolower($request->keyword);
 
-    $employees = Nhanvien::whereRaw('LOWER(tennv) LIKE ?', ["%$keyword%"])
-                         ->get();
+        $employees = User::where('role', 'admin')
+            ->whereRaw('LOWER(name) LIKE ?', ["%$keyword%"])
+            ->get();
 
-    return view(
-        'pages.employees.employeesAmin',
-        compact('employees'),
-        ['title' => 'Kết quả tìm kiếm']
-    );
-}
-
+        return view('pages.employees.employeesAmin', compact('employees'), [
+            'title' => 'Kết quả tìm kiếm'
+        ]);
+    }
 }
