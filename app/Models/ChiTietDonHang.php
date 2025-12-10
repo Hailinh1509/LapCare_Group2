@@ -17,10 +17,10 @@ class ChiTietDonHang extends Model
         'soluong',
         'dongia',
     ];
-
+ 
     public function donhang()
     {
-        return $this->belongsTo(DonHang::class, 'mahd', 'mahd');
+        return $this->belongsTo(DonHang::class, 'mahd', 'madh');
     }
 
     public function product()

@@ -257,6 +257,19 @@ use App\Http\Controllers\OrderController;
 Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
 });
+/*
+|--------------------------------------------------------------------------
+| ORDERS - thông tin đơn hàng và chi tiết đơn hàng
+|--------------------------------------------------------------------------
+*/
+use App\Http\Controllers\OrderAdminController;
+
+Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
+    Route::get('/orders', [OrderAdminController::class, 'index'])->name('orders.index');
+    Route::get('/orders/search', [OrderAdminController::class, 'search'])->name('orders.search');
+    Route::get('/orders/{madon}', [OrderAdminController::class, 'detail'])->name('orders.detail');
+});
+
 
 
 /*

@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
+ 
 class DonHang extends Model
 {
     use HasFactory;
@@ -35,6 +35,12 @@ class DonHang extends Model
 
     public function chitiet()
     {
-        return $this->hasMany(ChiTietDonHang::class, 'mahd', 'mahd');
+        return $this->hasMany(ChiTietDonHang::class, 'mahd', 'madh');
+
     }
+    public function user()
+{
+    return $this->belongsTo(User::class, 'matk', 'matk');
+}
+
 }
