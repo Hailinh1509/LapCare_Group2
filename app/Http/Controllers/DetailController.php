@@ -2,18 +2,17 @@
 
 namespace App\Http\Controllers;
 
-
 use App\Models\Product;
 use App\Models\DanhGia;
 use App\Models\GioHang;
-use App\Models\Users;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class DetailController extends Controller
 {
-    // ============================================
+    // ====================================================
     // ⭐ TRANG CHI TIẾT SẢN PHẨM
-    // ============================================
+    // ====================================================
     public function detail($masp, Request $request)
     {
         // Lấy sản phẩm theo mã
@@ -31,20 +30,15 @@ class DetailController extends Controller
         $filterStar = $request->query('star');
 
         $reviewsQuery = DanhGia::where('masp', $masp)
-            ->with('taikhoan')
+            ->with('User')
             ->orderBy('ngaytao', 'desc');
 
         if (!empty($filterStar) && $filterStar !== 'all') {
             $reviewsQuery->where('rating', intval($filterStar));
         }
 
-
-        // Phân trang
+        // Phân trang đánh giá
         $reviews = $reviewsQuery->paginate(5)->withQueryString();
-
-    $reviewsQuery = danhgia::where('masp', $masp)
-        ->with('user')
-        ->orderBy('ngaytao', 'desc');
 
         // ⭐ Thống kê rating
         $allReviews = DanhGia::where('masp', $masp)->get();
@@ -72,77 +66,52 @@ class DetailController extends Controller
         ));
     }
 
-
-    //Thêm sản phẩm vào giỏ
-        public function addToCart(Request $request)
-
-    {
-    $product_id = $request->product_id;
-    $quantity = max(1, (int) $request->quantity);
-
-    // Kiểm tra đăng nhập
-    $user = auth()->user();
-    if (!$user) {
-        return redirect()->route('login');
-    }
-
-    // Kiểm tra sản phẩm có tồn tại
-    $product = Product::where('masp', $product_id)->first();
-    if (!$product) {
-        return back()->with('error', 'Sản phẩm không tồn tại!');
-    }
-
-    // Kiểm tra sản phẩm đã trong giỏ chưa
-    $existing = \App\Models\GioHang::where('matk', $user->id)   // hoặc $user->matk nếu cột tên khác
-                ->where('masp', $product_id)
-                ->first();
-
-    if ($existing) {
-        // Nếu đã có → tăng số lượng
-        $existing->soluong += $quantity;
-        $existing->save();
-
-        return back()->with('success', 'Đã tăng số lượng sản phẩm trong giỏ hàng!');
-    }
-
-    // Nếu chưa có → thêm mới
-    \App\Models\GioHang::create([
-        'matk' => $user->id,  // hoặc tên cột tương ứng
-        'masp' => $product_id,
-        'soluong' => $quantity,
-        'ngaychon' => now(),
-    ]);
-
-    // Lần đầu thêm → chuyển sang giỏ hàng
-    return redirect('/cart')->with('success', 'Đã thêm sản phẩm vào giỏ hàng!');
-    }
-
-    // ============================================
-    // ⭐ MUA NGAY
-    // ============================================
-    public function buyNow(Request $request)
+    // ====================================================
+    // ⭐ THÊM SẢN PHẨM VÀO GIỎ
+    // ====================================================
+    public function addToCart(Request $request)
     {
         $product_id = $request->product_id;
         $quantity = max(1, (int) $request->quantity);
 
-        $product = Product::where('masp', $product_id)->first();
+        // Kiểm tra đăng nhập
+        $user = auth()->user();
+        if (!$user) {
+            return redirect()->route('login');
+        }
 
+        // Kiểm tra sản phẩm có tồn tại
+        $product = Product::where('masp', $product_id)->first();
         if (!$product) {
             return back()->with('error', 'Sản phẩm không tồn tại!');
         }
 
-        session()->put('buy_now', [
-            'product' => $product,
-            'quantity' => $quantity
+        // Kiểm tra sản phẩm đã trong giỏ chưa
+        $existing = GioHang::where('matk', $user->id)
+            ->where('masp', $product_id)
+            ->first();
+
+        if ($existing) {
+            $existing->soluong += $quantity;
+            $existing->save();
+
+            return back()->with('success', 'Đã tăng số lượng sản phẩm trong giỏ hàng!');
+        }
+
+        // Nếu chưa có → thêm mới
+        GioHang::create([
+            'matk' => $user->id,
+            'masp' => $product_id,
+            'soluong' => $quantity,
+            'ngaychon' => now(),
         ]);
 
-        return redirect('/checkout');
-
+        return redirect('/cart')->with('success', 'Đã thêm sản phẩm vào giỏ hàng!');
     }
 
-    // ============================================
+    // ====================================================
     // ⭐ GỬI ĐÁNH GIÁ
-    // ============================================
+    // ====================================================
     public function addReview(Request $request, $masp)
     {
         $request->validate([
@@ -160,7 +129,4 @@ class DetailController extends Controller
 
         return back()->with('success', 'Đánh giá của bạn đã được gửi!');
     }
-
-    }
-
-
+}
