@@ -29,6 +29,46 @@ class ThanhtoanController extends Controller
     }
 
 
+    public function showSelected(Request $request)
+{
+    //$maspList = $request->masp;  Đây là mảng các masp được tick
+    $maspList = json_decode($request->masp);
+
+    if (!$maspList || count($maspList) == 0) {
+        return redirect()->back()->with('error', 'Bạn phải chọn ít nhất 1 sản phẩm để thanh toán.');
+    }
+    $user = auth()->user();
+    // Lấy các sản phẩm tương ứng
+    $products = DB::table('giohang')
+        ->where('giohang.matk', $user->id)
+        ->whereIn('giohang.masp', $maspList)
+        ->join('sanpham', 'giohang.masp', '=', 'sanpham.masp')
+        ->select(
+            'giohang.soluong',      // số lượng người dùng chọn
+            'giohang.masp',
+            'sanpham.tensp',
+            'sanpham.giasp',
+            'sanpham.khuyenmai',
+            'sanpham.hinhanh'
+        )
+        ->get();
+
+    if ($products->isEmpty()) {
+        return redirect()->back()->with('error', 'Không tìm thấy sản phẩm nào.');
+    }
+
+    // Mock user (sau sẽ thay bằng Auth)
+    $customerName    = 'Khách hàng Lapcare';
+    $customerPhone   = '0356819205';
+    $customerAddress = '';
+
+    return view('pages.orderproduct', [
+        'products'        => $products,
+        'customerName'    => $customerName,
+        'customerPhone'   => $customerPhone,
+        'customerAddress' => $customerAddress,
+    ]);
+}
 
 
     // Xử lý form thanh toán

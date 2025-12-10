@@ -97,7 +97,7 @@
 </style>
 </head>
 <body>
-@include('header.header')
+@include('partials.header')
 
 <!--@section('content')-->
 <div class="cart-container">
@@ -107,7 +107,7 @@
     @if ($cartItems->isEmpty())
         <div style="text-align:center; padding:40px 0;">
             <h3>Giỏ hàng đang trống</h3>
-            <a href="/" class="cart-btn btn-light">Mua sắm ngay</a>
+            <a href="{{ route('products.list') }}" class="cart-btn btn-light">Mua sắm ngay</a>
         </div>
     @else
 
@@ -126,11 +126,11 @@
 
             @foreach ($cartItems as $item)
                 @php
-                    $dongia = $item->giasp;
+                    $dongia = $item->giasp*(1-$item->khuyenmai);
                     $thanhtien = $item->soluong * $dongia;
                 @endphp
 
-                <tr data-price="{{ $dongia }}">
+                <tr data-price="{{ $dongia }}" data-masp="{{ $item->masp }}">
                     <td>
                         <input type="checkbox" class="item-check">
                     </td>
@@ -177,7 +177,12 @@
     <div class="cart-buttons">
         <a href="{{ route('products.list') }}" class="cart-btn btn-light">Tiếp tục mua hàng</a>
         <a href="{{ route('cart.clear') }}" class="cart-btn btn-danger">Xóa giỏ hàng</a>
-        <a href="#" class="cart-btn btn-success" id="checkout-btn">Thanh toán</a>
+        <!--<a href="#" class="cart-btn btn-success" id="checkout-btn">Đặt hàng</a>-->
+        <form action="{{ route('cart.checkout') }}" method="POST" id="checkout-form">
+            @csrf
+            <input type="hidden" name="masp" id="selected-products">
+            <button type="submit" class="cart-btn btn-success">Đặt hàng</button>
+        </form>
     </div>
 
     @endif
@@ -185,49 +190,81 @@
 </div>
 
 <script>
-    // Cập nhật số lượng & thành tiền từng dòng
-    document.addEventListener("click", function(e) {
-        if (e.target.classList.contains("plus") || e.target.classList.contains("minus")) {
+   document.addEventListener("click", function(e) {
 
-            let row = e.target.closest("tr");
-            let input = row.querySelector(".qty-input");
-            let qty = parseInt(input.value);
+    if (e.target.classList.contains("plus") || e.target.classList.contains("minus")) {
 
-            if (e.target.classList.contains("plus")) qty++;
-            if (e.target.classList.contains("minus") && qty > 1) qty--;
+        let row = e.target.closest("tr");
+        let input = row.querySelector(".qty-input");
+        let masp = row.dataset.masp;
 
-            input.value = qty;
+        let qty = parseInt(input.value);
 
-            // cập nhật thành tiền
-            let price = parseInt(row.dataset.price);
-            let itemTotal = qty * price;
-            row.querySelector(".item-total").innerText = itemTotal.toLocaleString() + " đ";
+        if (e.target.classList.contains("plus")) qty++;
+        if (e.target.classList.contains("minus") && qty > 1) qty--;
 
-            updateGrandTotal();
-        }
-    });
+        input.value = qty;
 
-    // Khi click checkbox thì tính tổng
-    document.addEventListener("change", function(e) {
-        if (e.target.classList.contains("item-check")) {
-            updateGrandTotal();
-        }
-    });
-
-    // Hàm tính tổng tiền chỉ theo sản phẩm được tích
-    function updateGrandTotal() {
-        let total = 0;
-
-        document.querySelectorAll("tbody tr").forEach(row => {
-            let checkbox = row.querySelector(".item-check");
-            if (checkbox.checked) {
-                let itemTotal = row.querySelector(".item-total").innerText.replace(/[^\d]/g, "");
-                total += parseInt(itemTotal);
-            }
+        // Gửi yêu cầu cập nhật DB
+        fetch("{{ route('cart.updateQty') }}", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRF-TOKEN": "{{ csrf_token() }}"
+            },
+            body: JSON.stringify({
+                masp: masp,
+                soluong: qty
+            })
         });
 
-        document.getElementById("grand-total").innerText = total.toLocaleString() + " đ";
+        // cập nhật thành tiền
+        let price = parseInt(row.dataset.price);
+        let itemTotal = qty * price;
+        row.querySelector(".item-total").innerText = itemTotal.toLocaleString() + " đ";
+
+        updateGrandTotal();
     }
+});
+
+document.addEventListener("change", function(e) {
+    if (e.target.classList.contains("item-check")) {
+        updateGrandTotal();
+    }
+});
+
+function updateGrandTotal() {
+    let total = 0;
+
+    document.querySelectorAll("tbody tr").forEach(row => {
+        let checkbox = row.querySelector(".item-check");
+        if (checkbox && checkbox.checked) {
+            let itemTotal = row.querySelector(".item-total").innerText.replace(/[^\d]/g, "");
+            total += parseInt(itemTotal);
+        }
+    });
+
+    document.getElementById("grand-total").innerText = total.toLocaleString() + " đ";
+}
+//thu thập nội dung của form đặt hàng
+document.getElementById("checkout-form").addEventListener("submit", function (e) {
+    let checked = [];
+
+    document.querySelectorAll("tbody tr").forEach(row => {
+        let checkbox = row.querySelector(".item-check");
+        if (checkbox && checkbox.checked) {
+            checked.push(row.dataset.masp);
+        }
+    });
+
+    if (checked.length === 0) {
+        e.preventDefault();
+        alert("Bạn phải chọn ít nhất 1 sản phẩm để thanh toán.");
+        return;
+    }
+
+    document.getElementById("selected-products").value = JSON.stringify(checked);
+});
 </script>
 @include('footer.footer')
 </body>

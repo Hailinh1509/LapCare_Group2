@@ -24,7 +24,8 @@ class CartController extends Controller
                 'giohang.*',
                 'sanpham.tensp',
                 'sanpham.giasp',
-                'sanpham.hinhanh'
+                'sanpham.hinhanh',
+                'sanpham.khuyenmai'
             )
             ->get();
 
@@ -34,7 +35,7 @@ class CartController extends Controller
     // ============================
     // ⭐ CẬP NHẬT SỐ LƯỢNG
     // ============================
-    public function update(Request $request)
+    /*public function update(Request $request)
     {
         $user = auth()->user();
         if (!$user) return redirect('/login');
@@ -48,8 +49,15 @@ class CartController extends Controller
         }
 
         return back()->with('success', 'Cập nhật giỏ hàng thành công!');
-    }
+    }*/
+    public function updateQty(Request $request)
+{
+    GioHang::where('matk', auth()->id())
+        ->where('masp', $request->masp)
+        ->update(['soluong' => $request->soluong]);
 
+    return response()->json(['ok' => true]);
+}
 
     // ============================
     // ⭐ XOÁ 1 SẢN PHẨM KHỎI GIỎ

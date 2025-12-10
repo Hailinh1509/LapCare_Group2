@@ -28,7 +28,7 @@
 </style>
 </head>
 <body>
-@include('header.header')
+@include('partials.header')
 
     <div class="container mt-5"style="display: flex;flex-direction: column; gap: 20px;">
         <div class="row">
@@ -102,6 +102,7 @@
             <form action="{{ route('thanhtoan.show', ['masp' => $product->masp]) }}" method="GET" class="form-buy">
                 <button type="submit" class="btn-buy-now">Mua ngay</button>
             </form>
+
         </div>
 
             </div> <!-- end col-md-6 -->

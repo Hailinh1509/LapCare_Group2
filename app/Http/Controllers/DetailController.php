@@ -71,42 +71,44 @@ class DetailController extends Controller
     // ====================================================
     public function addToCart(Request $request)
     {
-        $product_id = $request->product_id;
-        $quantity = max(1, (int) $request->quantity);
+$product_id = $request->product_id;
+    $quantity = max(1, (int) $request->quantity);
 
-        // Kiểm tra đăng nhập
-        $user = auth()->user();
-        if (!$user) {
-            return redirect()->route('login');
-        }
+    // Kiểm tra đăng nhập
+    if (!auth()->check()) {
+        return redirect()->route('login');
+    }
 
-        // Kiểm tra sản phẩm có tồn tại
-        $product = Product::where('masp', $product_id)->first();
-        if (!$product) {
-            return back()->with('error', 'Sản phẩm không tồn tại!');
-        }
+    $user = auth()->user();
 
-        // Kiểm tra sản phẩm đã trong giỏ chưa
-        $existing = GioHang::where('matk', $user->id)
+    // Kiểm tra sản phẩm có tồn tại
+    $product = Product::where('masp', $product_id)->first();
+    if (!$product) {
+        return back()->with('error', 'Sản phẩm không tồn tại!');
+    }
+
+    // Kiểm tra sản phẩm đã có trong giỏ chưa
+    $existing = GioHang::where('matk', $user->id)
             ->where('masp', $product_id)
             ->first();
 
-        if ($existing) {
-            $existing->soluong += $quantity;
-            $existing->save();
-
-            return back()->with('success', 'Đã tăng số lượng sản phẩm trong giỏ hàng!');
-        }
-
-        // Nếu chưa có → thêm mới
+    if ($existing) {
+        // Tăng số lượng
+        $existing->soluong += $quantity;
+        $existing->save();
+    } else {
+        // Thêm mới
         GioHang::create([
             'matk' => $user->id,
             'masp' => $product_id,
             'soluong' => $quantity,
             'ngaychon' => now(),
         ]);
+    }
 
-        return redirect('/cart')->with('success', 'Đã thêm sản phẩm vào giỏ hàng!');
+    // ⭐ Luôn chuyển sang trang giỏ hàng
+    return redirect()->route('cart.index')
+                     ->with('success', 'Đã thêm vào giỏ hàng!');
     }
 
     // ====================================================

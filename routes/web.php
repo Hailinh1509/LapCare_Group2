@@ -174,14 +174,24 @@ Route::post('/cart/add', [DetailController::class, 'addToCart'])
     ->name('cart.add');
 
 // Mua ngay
-Route::post('/buy-now', [DetailController::class, 'buyNow'])->name('buy.now');
-
+Route::post('/buy-now/{masp}', [ThanhtoanController::class, 'show'])->name('buy.now');
 // Gửi đánh giá
 Route::post('/product/{masp}/review', [DetailController::class, 'addReview'])->name('product.review');
 
 Route::post('/buy-now/{masp}', [ThanhtoanController::class, 'show'])->name('buy.now');
 
 
+Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+Route::post('/cart/add', [DetailController::class, 'addToCart'])    ->name('cart.add');
+//Route::post('/cart/update', [CartController::class, 'update'])->name('cart.update');
+Route::post('/cart/update-qty', [CartController::class, 'updateQty'])->name('cart.updateQty');
+Route::get('/cart/remove/{masp}', [CartController::class, 'remove'])->name('cart.remove');
+Route::get('/cart/clear', [CartController::class, 'clear'])->name('cart.clear');
+//xử lý nút đặt 
+Route::post('/checkout', [ThanhtoanController::class, 'showSelected'])
+    ->name('cart.checkout');
+Route::post('/checkout/process', [ThanhtoanController::class, 'process'])
+    ->name('checkout.process');
 
 /*
 |--------------------------------------------------------------------------
