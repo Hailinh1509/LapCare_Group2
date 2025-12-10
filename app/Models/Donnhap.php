@@ -10,7 +10,9 @@ class Donnhap extends Model
     public $incrementing = false;   // VÌ madn là VARCHAR, KHÔNG PHẢI AUTO ID
     protected $keyType = 'string';  // BẮT BUỘC
     public $timestamps = false;
-
+protected $fillable = [
+    'madn', 'mancc', 'matk', 'ngaynhap', 'ttthanhtoan'
+];
     public function ncc()
     {
         return $this->belongsTo(NhaCungCap::class, 'mancc', 'mancc');

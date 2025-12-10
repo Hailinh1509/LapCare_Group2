@@ -2,16 +2,22 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Sanpham;
 
-class ChitietDonNhap extends Model
+class Chitietdonnhap extends Model
 {
     protected $table = 'chitietdonnhap';
     public $timestamps = false;
 
+    protected $fillable = [
+        'madn',
+        'masp',
+        'soluong',
+        'gianhap',
+    ];
+
     public function product()
     {
-        return $this->belongsTo(SanPham::class, 'masp', 'masp');
+        return $this->belongsTo(Sanpham::class, 'masp', 'masp');
     }
 }
-
-
