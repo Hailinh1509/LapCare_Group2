@@ -52,34 +52,31 @@
       box-shadow:0 2px 5px rgba(0,0,0,0.1);
       padding: 0px;
     }
-    .nav{
-      max-width:1200px;
-      margin: auto;
-      padding:1px 10px;
-      display:flex;
-      grid-template-columns: auto 1fr auto;
-      gap:10px;
-      align-items:center;
-       justify-content: center;
-       
+    .nav {
+        max-width: 2200px;
+        margin: auto;
+        padding: 10px 15px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;  /* LOGO TRÁI – MENU PHẢI */
+        gap: 1px;
+        flex-wrap: nowrap;               /* BẮT BUỘC: KHÔNG CHO XUỐNG DÒNG */
     }
 
     /* Logo */
     .logo{
       display:flex;
       align-items:center;
-      gap:12px;
+      gap:5px;
       
       text-decoration:none;
     }
-
-
 
     /* Left controls */
     .left-controls{
       display:flex;
       align-items:center;
-      gap:12px;
+      gap:10px;
     }
     .btn{
       display:flex;

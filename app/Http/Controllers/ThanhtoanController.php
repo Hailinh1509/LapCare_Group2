@@ -32,7 +32,6 @@ class ThanhtoanController extends Controller
         ]);
     }
 
-<<<<<<< HEAD
 
     public function showSelected(Request $request)
 {
@@ -76,8 +75,6 @@ class ThanhtoanController extends Controller
 }
 
 
-=======
->>>>>>> 7a39b3b (Update layout + controllers + views)
     // Xử lý form thanh toán
     public function process(Request $request, $masp)
     {

@@ -194,7 +194,7 @@ Route::post('/buy-now/{masp}', [ThanhtoanController::class, 'show'])->name('buy.
 
 
 Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
-Route::post('/cart/add', [DetailController::class, 'addToCart'])    ->name('cart.add');
+//Route::post('/cart/add', [DetailController::class, 'addToCart'])    ->name('cart.add');
 //Route::post('/cart/update', [CartController::class, 'update'])->name('cart.update');
 Route::post('/cart/update-qty', [CartController::class, 'updateQty'])->name('cart.updateQty');
 Route::get('/cart/remove/{masp}', [CartController::class, 'remove'])->name('cart.remove');

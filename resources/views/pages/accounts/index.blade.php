@@ -24,11 +24,11 @@
 
     .account-label {
         font-weight: 600;
-        color: #555;
+        color: #0c0c0cff;
     }
 
     .account-value {
-        color: #222;
+        color: #060606ff;
         padding-left: 5px;
     }
 
@@ -40,9 +40,9 @@
         padding: 10px 22px;
         border-radius: 8px;
         font-weight: 600;
-        background-color: #af8ec6ff !important; /* tím đậm */
+        background-color: #683989ff !important; /* tím đậm */
         border-color: #4B0082 !important;
-        color: #fff !important;
+        color: white !important;
         transition: 0.2s ease-in-out;
     }
 

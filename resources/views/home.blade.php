@@ -344,29 +344,20 @@
                                 </p>
 
                                 <div class="mt-auto d-flex gap-2">
-<<<<<<< HEAD
                                     <a href="{{ route('products.detail', ['masp' => $p->masp]) }}"
                                        class="btn btn-outline-secondary btn-sm flex-grow-1 btn-detail-home">
                                         Chi tiết
                                     </a>
-                                    <a href="cart.php?action=add&masp={{ urlencode($p->masp) }}"
-                                       class="btn btn-danger btn-sm flex-grow-1 btn-add-home">
-                                        Thêm
-                                    </a>
+                                    <form action="{{ route('cart.add') }}" method="POST" class="d-inline">
+                                        @csrf
+                                        <input type="hidden" name="product_id" value="{{ $p->masp }}">
+                                        <input type="hidden" name="quantity" value="1">
+                                        
+                                        <button type="submit" class="btn btn-danger btn-sm flex-grow-1 btn-add-home">
+                                            Thêm
+                                        </button>
+                                    </form>
                                 </div>
-=======
-    <a href="{{ route('product.detail', ['masp' => $p->masp]) }}"
-       class="btn btn-outline-secondary btn-sm flex-grow-1 btn-detail-home">
-        Chi tiết
-    </a>
-
-    <a href="cart.php?action=add&masp={{ urlencode($p->masp) }}"
-       class="btn btn-danger btn-sm flex-grow-1 btn-add-home">
-        Thêm
-    </a>
-</div>
-
->>>>>>> 7a39b3b (Update layout + controllers + views)
                             </div>
                         </div>
                     </div>
