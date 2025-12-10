@@ -344,6 +344,7 @@
                                 </p>
 
                                 <div class="mt-auto d-flex gap-2">
+<<<<<<< HEAD
                                     <a href="{{ route('products.detail', ['masp' => $p->masp]) }}"
                                        class="btn btn-outline-secondary btn-sm flex-grow-1 btn-detail-home">
                                         Chi tiết
@@ -353,6 +354,19 @@
                                         Thêm
                                     </a>
                                 </div>
+=======
+    <a href="{{ route('product.detail', ['masp' => $p->masp]) }}"
+       class="btn btn-outline-secondary btn-sm flex-grow-1 btn-detail-home">
+        Chi tiết
+    </a>
+
+    <a href="cart.php?action=add&masp={{ urlencode($p->masp) }}"
+       class="btn btn-danger btn-sm flex-grow-1 btn-add-home">
+        Thêm
+    </a>
+</div>
+
+>>>>>>> 7a39b3b (Update layout + controllers + views)
                             </div>
                         </div>
                     </div>

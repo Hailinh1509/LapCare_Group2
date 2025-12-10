@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;   // <-- THÊM DÒNG NÀY
 
 class ThanhtoanController extends Controller
 {
@@ -15,10 +16,13 @@ class ThanhtoanController extends Controller
             abort(404);
         }
 
-        // Tạm thời mock thông tin user, sau sẽ lấy từ bảng users / Auth
-        $customerName    = 'Khách hàng Lapcare';
-        $customerPhone   = '0356819205';
-        $customerAddress = '';
+        // Lấy user đang đăng nhập
+        $user = Auth::user();
+
+        // Lấy thông tin từ tài khoản (đổi tên cột theo DB của bạn)
+        $customerName    = $user?->name ?? 'Khách hàng Lapcare';
+        $customerPhone   = $user?->sdt ?? '';      // ví dụ cột trong bảng users là "phone"
+        $customerAddress = $user?->diachi ?? '';    // ví dụ cột là "address"
 
         return view('thanhtoan', [
             'product'         => $product,
@@ -28,6 +32,7 @@ class ThanhtoanController extends Controller
         ]);
     }
 
+<<<<<<< HEAD
 
     public function showSelected(Request $request)
 {
@@ -71,6 +76,8 @@ class ThanhtoanController extends Controller
 }
 
 
+=======
+>>>>>>> 7a39b3b (Update layout + controllers + views)
     // Xử lý form thanh toán
     public function process(Request $request, $masp)
     {
@@ -89,13 +96,11 @@ class ThanhtoanController extends Controller
 
         $proofPath = null;
         if ($request->hasFile('payment_proof')) {
-            // Lưu ảnh xác nhận vào storage/app/public/payment_proofs
             $proofPath = $request->file('payment_proof')
                                  ->store('payment_proofs', 'public');
         }
 
         // TODO: sau này lưu vào bảng orders,...
-        // DB::table('orders')->insert([...]);
 
         return redirect()->route('home')
             ->with('success', 'Đặt hàng thành công! Chúng tôi sẽ liên hệ với bạn sớm.');

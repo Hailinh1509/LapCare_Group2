@@ -1,4 +1,13 @@
 <!DOCTYPE html>
+@php
+    $brands        = $brands        ?? [];
+    $ramOptions    = $ramOptions    ?? [];
+    $ocungOptions  = $ocungOptions  ?? [];
+    $screenOptions = $screenOptions ?? [];
+    $cpuOptions    = $cpuOptions    ?? [];
+    $priceRanges   = $priceRanges   ?? [];
+@endphp
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
