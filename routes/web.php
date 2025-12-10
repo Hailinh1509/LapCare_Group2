@@ -323,6 +323,8 @@ use App\Http\Controllers\ImportOrderController;
 
 Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::get('/imports', [ImportOrderController::class, 'index'])->name('imports.index');
+    Route::post('/imports/update-payment', [ImportOrderController::class, 'updatePayment'])
+        ->name('imports.updatePayment');
     Route::get('/imports/create', [ImportOrderController::class, 'create'])->name('imports.create');
     Route::get('/imports/search', [ImportOrderController::class, 'search'])->name('imports.search');
     Route::post('/imports', [ImportOrderController::class, 'store'])->name('imports.store');

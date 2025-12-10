@@ -61,6 +61,18 @@
 
 
 {{-- BẢNG ĐƠN NHẬP --}}
+@if (session('success'))
+    <div class="alert alert-success">
+        {{ session('success') }}
+    </div>
+@endif
+{{-- THÔNG BÁO THÀNH CÔNG --}}
+@if (session('success'))
+    <div class="alert alert-success">
+        {{ session('success') }}
+    </div>
+@endif
+
 <table class="table table-bordered table-striped mt-3">
     <thead>
         <tr>
@@ -91,12 +103,30 @@
 
             {{-- ✔ THANH TOÁN --}}
             <td>
-                @if($order->ttthanhtoan == 'chưa thanh toán')
-                    <span class="badge-status badge-unpaid">Chưa thanh toán</span>
-                @else
-                    <span class="badge-status badge-paid">Đã thanh toán</span>
-                @endif
-            </td>
+    <form action="{{ route('imports.updatePayment') }}" method="POST" class="d-flex gap-2">
+        @csrf
+
+        <input type="hidden" name="madn" value="{{ $order->madn }}">
+
+        <select name="ttthanhtoan" class="form-select form-select-sm"
+                {{ $order->ttthanhtoan == 'đã thanh toán' ? 'disabled' : '' }}>
+            <option value="chưa thanh toán"
+                    {{ $order->ttthanhtoan == 'chưa thanh toán' ? 'selected' : '' }}>
+                Chưa thanh toán
+            </option>
+            <option value="đã thanh toán"
+                    {{ $order->ttthanhtoan == 'đã thanh toán' ? 'selected' : '' }}>
+                Đã thanh toán
+            </option>
+        </select>
+
+        @if($order->ttthanhtoan != 'đã thanh toán')
+            <button class="btn btn-success btn-sm">Cập nhật</button>
+        @endif
+    </form>
+</td>
+
+
 
             {{-- ✔ LINK XEM CHI TIẾT --}}
             <td>

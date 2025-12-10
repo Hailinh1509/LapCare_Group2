@@ -3,6 +3,17 @@
 @section('content')
 <div class="container mt-4">
     <h3>Thêm đơn nhập mới</h3>
+{{-- HIỂN THỊ LỖI VALIDATE --}}
+@if ($errors->any())
+    <div class="alert alert-danger">
+        <strong>Đã xảy ra lỗi:</strong>
+        <ul class="mt-2 mb-0">
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
 
     <form action="{{ route('imports.store') }}" method="POST">
         @csrf

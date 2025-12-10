@@ -69,13 +69,36 @@ public function search(Request $request)
         'title' => 'Kết quả tìm kiếm đơn nhập'
     ]);
 }
+//chuyen trang thai thanh toán
+public function updatePayment(Request $request)
+{
+    $request->validate([
+        'madn' => 'required',
+        'ttthanhtoan' => 'required|in:chưa thanh toán,đã thanh toán',
+    ]);
+
+    $order = Donnhap::findOrFail($request->madn);
+
+    // Nếu đã thanh toán → KHÔNG được chuyển về chưa thanh toán
+    if ($order->ttthanhtoan == 'đã thanh toán') {
+        return back()->with('error', 'Đơn nhập đã thanh toán — không thể chỉnh sửa lại!');
+    }
+
+    // Cập nhật
+    $order->ttthanhtoan = $request->ttthanhtoan;
+    $order->save();
+
+    return back()->with('success', 'Cập nhật trạng thái thanh toán thành công!');
+}
 
 //form nhap don
 public function create()
 {
     $suppliers = \App\Models\Nhacungcap::all();
     $products = \App\Models\Sanpham::all();
-    return view('pages.imports.create', compact('suppliers', 'products'));
+    return view('pages.imports.create', compact('suppliers', 'products'),[
+        'title' => 'Thêm đơn nhập'
+    ]);
 }
 public function store(Request $request)
 {
@@ -117,15 +140,6 @@ public function store(Request $request)
     return redirect()->route('imports.index')
         ->with('success', 'Thêm đơn nhập thành công!');
 }
-
-
-
-
-
-
-
-
-
 
 
 }
