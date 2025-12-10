@@ -20,7 +20,7 @@
 
 <body>
 
-@include('header.header')
+@include('partials.header')
 
 <div class="policy-container">
     <iframe 

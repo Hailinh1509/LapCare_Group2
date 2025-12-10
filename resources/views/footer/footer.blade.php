@@ -38,7 +38,7 @@
           <li><a href="{{ route('policy.warranty') }}">Chính sách bảo hành</a></li>
           <li><a href="{{ route('policy.returns') }}">Chính sách đổi trả</a></li>
           <li><a href="{{ route('policy.privacy') }}">Chính sách bảo mật thông tin</a></li>
-          <li><a href="#">Chính sách vận chuyển</a></li>
+          
           <li><a href="{{ route('policy.operation') }}">Quy chế hoạt động</a></li>
         </ul>
       </div>
