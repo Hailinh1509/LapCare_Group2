@@ -18,17 +18,21 @@
       <div class="footer-col"> <BR>
         <h4>Về LAPCARE</h4>
         <ul>
-          <li><a href="#">Về chúng tôi</a></li>
-          <li><a href="#">Liên hệ</a></li>
+         
+          <li><a href="{{ Auth::check() ? route('home.logged') : route('home') }}">Về chúng tôi</a></li>
+          <li><a href="https://zalo.me/0356819205">Liên hệ</a></li>
         </ul>
         <h4>Kết nối</h4>
         <div class="social-icons">
-          <a href="#"><img src="../images/facebook.png" alt="Facebook"></a>
+          <a href="https://www.facebook.com/lapcareworld?locale=vi_VN"><img src="../images/facebook.png" alt="Facebook"></a>
      <!--     <a href="#"><img src="../images/insta.png" alt=".."></a>  -->
-          <a href="#"><img src="../images/tiktok.png" alt="TIKTOK"></a>
-          <a href="#"><img src="../images/zalo.png" alt="Zalo"></i></a>
+          <a href="https://www.tiktok.com/@lapcarestore"><img src="../images/tiktok.png" alt="TIKTOK"></a>
+          <a href="https://zalo.me/0356819205"><img src="../images/zalo.png" alt="Zalo"></i></a>
         </div>
         <h4>Phương thức thanh toán</h4>
+                <div class="social-icons">
+          <a href="#"><img src="../images/logo_MB.png" alt="MBbank" style="width:90px; height:auto; margin-top:5px;"></a>
+</div>
       </div>
 
       <div class="footer-col"><BR>

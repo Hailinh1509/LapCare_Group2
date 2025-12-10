@@ -482,6 +482,9 @@
     border: none;
     border-radius: 12px;
     transition: .2s;
+     text-decoration: none;
+      display: inline-block;
+      text-align: center
 }
 
 .btn-buy:hover { background: linear-gradient(45deg, #d70018, #baa9ff); }

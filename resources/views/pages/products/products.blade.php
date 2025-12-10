@@ -220,10 +220,16 @@
                                 @endif
                             </p>
 
-                            <div class="btn-group">
-                                <button class="btn-buy">Mua hàng</button>
-                                <a href="/giohang/them/{{ $sp->masp }}" class="btn-cart-icon"><i class="fa fa-shopping-cart"></i></a>
-                            </div>
+<div class="btn-group">
+    <a href="{{ route('thanhtoan.show', ['masp' => $sp->masp]) }}" class="btn-buy">
+        Mua hàng
+    </a>
+
+    <a href="/giohang/them/{{ $sp->masp }}" class="btn-cart-icon">
+        <i class="fa fa-shopping-cart"></i>
+    </a>
+</div>
+
                         </div>
                     @endforeach
                 @endif
