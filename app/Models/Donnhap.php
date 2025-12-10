@@ -3,10 +3,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Donnhap extends Model   
+class Donnhap extends Model
 {
     protected $table = 'donnhap';
     protected $primaryKey = 'madn';
+    public $incrementing = false;   // VÌ madn là VARCHAR, KHÔNG PHẢI AUTO ID
+    protected $keyType = 'string';  // BẮT BUỘC
     public $timestamps = false;
 
     public function ncc()
@@ -18,4 +20,8 @@ class Donnhap extends Model
     {
         return $this->hasMany(Chitietdonnhap::class, 'madn', 'madn');
     }
+     public function user()
+{
+    return $this->belongsTo(User::class, 'matk', 'matk');
+}
 }

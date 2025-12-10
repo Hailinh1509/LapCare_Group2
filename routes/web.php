@@ -272,7 +272,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
 | ORDERS
 |--------------------------------------------------------------------------
 */
-
+/*
 use App\Http\Controllers\OrderController;
 
 Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
@@ -324,11 +324,26 @@ use App\Http\Controllers\ImportOrderController;
 Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::get('/imports', [ImportOrderController::class, 'index'])->name('imports.index');
     Route::get('/imports/create', [ImportOrderController::class, 'create'])->name('imports.create');
+    Route::get('/imports/search', [ImportOrderController::class, 'search'])->name('imports.search');
     Route::post('/imports', [ImportOrderController::class, 'store'])->name('imports.store');
     Route::get('/imports/{id}/edit', [ImportOrderController::class, 'edit'])->name('imports.edit');
     Route::put('/imports/{id}', [ImportOrderController::class, 'update'])->name('imports.update');
     Route::delete('/imports/{id}', [ImportOrderController::class, 'destroy'])->name('imports.destroy');
+    Route::get('/imports/{madon}', [ImportOrderController::class, 'detail'])->name('imports.detail');
 });
 
+/*
+|--------------------------------------------------------------------------
+| ORDERS - thông tin đơn hàng và chi tiết đơn hàng
+|--------------------------------------------------------------------------
+
+use App\Http\Controllers\ImportOrderController;
+
+Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
+    Route::get('/imports', [ImportOrderController::class, 'index'])->name('imports.index');
+    Route::get('/imports/search', [ImportOrderController::class, 'search'])->name('imports.search');
+    Route::get('/imports/{madon}', [ImportOrderController::class, 'detail'])->name('imports.detail');
+});
+*/
 
 require __DIR__.'/auth.php';

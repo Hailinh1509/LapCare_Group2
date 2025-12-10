@@ -1,48 +1,114 @@
 @extends('layouts.admin')
 
 @section('content')
+<style>
+    /* Màu nền header bảng sản phẩm */
+    .product-table thead th {
+        background-color: #1101c8ff !important;
+        color: white !important;
+        text-align: center;
+        font-size: 15px;
+    }
+
+    .product-table td {
+        vertical-align: middle;
+        font-size: 14px;
+    }
+    /* Căn giữa toàn bộ nội dung các ô */
+    .order-table td,
+    .order-table th {
+        text-align: center !important;
+        vertical-align: middle !important;
+    }
+
+    /* Riêng cột sản phẩm muốn căn trái thì bỏ dòng dưới */
+    .product-col {
+        text-align: center !important;
+    }
+
+    /* Ảnh sản phẩm đẹp hơn */
+    .product-img {
+        width: 70px;
+        height: auto;
+        margin-right: 10px;
+    }
+    .order-header th {
+    background-color: #1101c8ff !important;
+    color: #fff !important;
+}
+
+</style>
 
 <div class="container mt-4">
 
-    <h3>Chi tiết đơn nhập #{{ $import->madn }}</h3>
+    <h3 class="mb-4">Chi tiết đơn nhập #{{ $order->madn }}</h3>
+{{-- ============ HÀNG 1: Thông tin nhận nhập hàng + Hình thức thanh toán ============ --}}
+<div class="row mb-4">
 
-    <div class="card p-3 mb-4">
-        <p><strong>Nhà cung cấp:</strong> {{ $import->ncc->tenncc }}</p>
-        <p><strong>Ngày nhập:</strong> {{ $import->ngaynhap }}</p>
-        <p><strong>Trạng thái thanh toán:</strong> 
-            @if($import->ttthanhtoan == 'đã thanh toán')
-                <span class="badge btn-success p-2">Đã thanh toán</span>
-            @else
-                <span class="badge btn-danger p-2">Chưa thanh toán</span>
-            @endif
-        </p>
-        <p><strong>Tổng tiền:</strong> {{ number_format($import->tongtien, 0, ',', '.') }}đ</p>
+    {{-- CỘT 1: THÔNG TIN NHẬP HÀNG (70%) --}}
+    <div class="col-md-8">
+        <div class="card p-3 h-100">
+            <h5><strong>📦 Thông tin nhập hàng</strong></h5>
+
+            <p><strong>Mã đơn nhập:</strong> {{ $order->madn }}</p>
+            <p><strong>Nhân viên nhập:</strong> 
+    {{ $order->user->name ?? 'Không có' }}
+</p>
+            <p><strong>Nhà cung cấp:</strong> {{ $order->ncc->tenncc ?? 'Không có' }}</p>
+            <p><strong>Số điện thoại:</strong> {{ $order->ncc->sdt ?? 'Không có' }}</p>
+            <p><strong>Ngày nhập:</strong> {{ $order->ngaynhap }}</p>
+        </div>
     </div>
 
-    <h5><strong>Sản phẩm nhập</strong></h5>
+    {{-- CỘT 2:  THANH TOÁN (30%) --}}
+    <div class="col-md-4">
+        <div class="card p-3 h-100">
+            <h5><strong>💳 Thanh toán</strong></h5>
 
-    <table class="table table-bordered">
-        <thead style="background:#1101c8ff;color:white;">
-            <tr>
-                <th>Sản phẩm</th>
-                <th>Số lượng</th>
-                <th>Giá nhập</th>
-                <th>Thành tiền</th>
-            </tr>
-        </thead>
+            <strong>Trạng thái thanh toán:</strong>
+            @if($order->ttthanhtoan == 'đã thanh toán')
+                <span class="badge bg-success w-100 p-2 mt-2 text-center">đã thanh toán</span>
+            @else
+                <span class="badge bg-danger w-100 p-2 mt-2 text-center">chưa thanh toán</span>
+            @endif
+        </div>
+    </div>
 
-        <tbody>
-            @foreach ($details as $d)
-            <tr>
-                <td>{{ $d->product->tensp ?? 'Sản phẩm bị xóa' }}</td>
-                <td>{{ $d->soluong }}</td>
-                <td>{{ number_format($d->gianhap, 0, ',', '.') }}đ</td>
-                <td>{{ number_format($d->soluong * $d->gianhap, 0, ',', '.') }}đ</td>
-            </tr>
-            @endforeach
-        </tbody>
-    </table>
+</div>
+{{-- ================== DANH SÁCH SẢN PHẨM ================== --}}
+<div class="card mb-4 p-3">
+    <h5><strong>🛒 Sản phẩm</strong></h5>
 
+<table class="table table-bordered order-table">
+    <thead class="order-header">
+        <tr>
+            <th class="product-col">Sản phẩm</th>
+            <th>Số lượng</th>
+            <th>Đơn giá</th>
+            <th>Thành tiền</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach ($details as $item)
+        <tr>
+            <td class="product-col">
+                <img src="/{{ $item->product->hinhanh }}" class="product-img">
+                {{ $item->product->tensp }}
+            </td>
+            <td>{{ $item->soluong }}</td>
+            <td>{{ number_format($item->gianhap, 0, ',', '.') }}đ</td>
+            <td>{{ number_format($item->soluong * $item->gianhap, 0, ',', '.') }}đ</td>
+        </tr>
+        @endforeach
+    </tbody>
+</table>
+
+
+</div>
+<div class="text-start mt-3 mb-5">
+    <a href="{{ route('imports.index') }}" class="btn btn-warning">
+        ← Về danh sách đơn hàng
+    </a>
 </div>
 
 @endsection

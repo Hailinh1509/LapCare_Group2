@@ -1,56 +1,119 @@
 @extends('layouts.admin')
 
 @section('content')
+
 <style>
 .table thead th {
     background-color: #1101c8ff !important;
     color: white !important;
     text-align: center !important;
+    font-size: 16px !important; 
 }
-.table td { text-align:center; }
-.badge-paid { background:#d4ffe1; color:#1e9e43; padding:6px 12px; border-radius:12px; }
-.badge-unpaid { background:#ffe3e3; color:#d92b2b; padding:6px 12px; border-radius:12px; }
+.badge-status {
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 13px;
+}
+.badge-unpaid { color:#d9534f;border:2px solid #d9534f;background:#ffe5e5; }
+.badge-paid { color:#4CAF50;border:2px solid #4CAF50;background:#e7ffe7; }
+.table th, .table td {
+    text-align:center !important;
+    vertical-align:middle !important;
+}
+.search-input {
+    height: 42px;
+    font-size: 14px;
+    background-color: #fffcfcff;
+    border-radius: 6px;
+}
+.search-input::placeholder {
+    color: #999;
+    font-size: 13px;
+}
+.btn-primary {
+    background-color: #1101c8ff;
+    border: none;
+}
 </style>
 
 <div class="container mt-4">
+
     <h3>Danh sách đơn nhập</h3>
 
-    <table class="table table-bordered mt-3">
-        <thead>
-            <tr>
-                <th>Mã đơn nhập</th>
-                <th>Nhà cung cấp</th>
-                <th>Ngày nhập</th>
-                <th>Tổng tiền</th>
-                <th>Thanh toán</th>
-                <th>Chi tiết</th>
-            </tr>
-        </thead>
+{{-- THANH TÌM KIẾM --}}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <form action="{{ route('imports.search') }}" method="GET" class="flex-grow-1" style="max-width: 500px;">
+        <div class="input-group">
+            <input 
+                type="text"
+                name="keyword"
+                class="form-control search-input"
+                placeholder="Tìm theo mã đơn hoặc tên nhà cung cấp"
+                value="{{ request('keyword') }}"
+            >
+            <button class="btn btn-primary">Tìm</button>
+        </div>
+    </form>
 
-        <tbody>
-            @foreach ($imports as $item)
-            <tr>
-                <td>{{ $item->madn }}</td>
-                <td>{{ $item->ncc->tenncc ?? 'Không có' }}</td>
-                <td>{{ $item->ngaynhap }}</td>
-                <td>{{ number_format($item->tongtien, 0, ',', '.') }}đ</td>
-
-                <td>
-                    @if($item->ttthanhtoan == 'đã thanh toán')
-                        <span class="badge-paid">Đã thanh toán</span>
-                    @else
-                        <span class="badge-unpaid">Chưa thanh toán</span>
-                    @endif
-                </td>
-
-                <td>
-                    <a href="{{ route('imports.detail', $item->madn) }}" class="btn btn-primary btn-sm">
-                        Xem
-                    </a>
-                </td>
-            </tr>
-            @endforeach
-        </tbody>
-    </table>
+    <a href="{{ route('imports.index') }}" class="btn btn-secondary ms-3">Xem tất cả</a>
 </div>
+
+
+{{-- BẢNG ĐƠN NHẬP --}}
+<table class="table table-bordered table-striped mt-3">
+    <thead>
+        <tr>
+            <th>Mã đơn</th>
+            <th>Nhà cung cấp</th>
+            <th>Ngày nhập</th>
+            <th>Tổng tiền</th>
+            <th>Thanh toán</th>
+            <th>Chi tiết</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @forelse($orders as $order)
+        <tr>
+
+            {{-- ✔ MÃ ĐƠN NHẬP --}}
+            <td>{{ $order->madn }}</td>
+
+            {{-- ✔ TÊN NHÀ CUNG CẤP --}}
+            <td>{{ $order->ncc->tenncc ?? 'Không có' }}</td>
+
+            {{-- ✔ NGÀY NHẬP --}}
+            <td>{{ $order->ngaynhap }}</td>
+
+            {{-- ✔ TỔNG TIỀN --}}
+            <td>{{ number_format($order->tongtien ?? 0, 0, ',', '.') }} đ</td>
+
+            {{-- ✔ THANH TOÁN --}}
+            <td>
+                @if($order->ttthanhtoan == 'chưa thanh toán')
+                    <span class="badge-status badge-unpaid">Chưa thanh toán</span>
+                @else
+                    <span class="badge-status badge-paid">Đã thanh toán</span>
+                @endif
+            </td>
+
+            {{-- ✔ LINK XEM CHI TIẾT --}}
+            <td>
+                <a href="{{ route('imports.detail', $order->madn) }}" class="btn btn-primary btn-sm">
+                    Xem
+                </a>
+            </td>
+        </tr>
+
+        @empty
+        <tr>
+            <td colspan="7" class="text-center text-danger">Không có đơn nhập nào.</td>
+        </tr>
+        @endforelse
+    </tbody>
+</table>
+
+</div>
+
 @endsection
