@@ -225,9 +225,25 @@
         Mua hàng
     </a>
 
-    <a href="/giohang/them/{{ $sp->masp }}" class="btn-cart-icon">
+@auth
+    <a href="#"
+       onclick="event.preventDefault(); document.getElementById('add-cart-{{ $sp->masp }}').submit();"
+       class="btn-cart-icon">
         <i class="fa fa-shopping-cart"></i>
     </a>
+
+    <!-- form ẩn để gửi request thêm giỏ -->
+    <form id="add-cart-{{ $sp->masp }}" action="{{ route('cart.add') }}" method="POST" style="display: none;">
+        @csrf
+        <input type="hidden" name="product_id" value="{{ $sp->masp }}">
+        <input type="hidden" name="quantity" value="1">
+    </form>
+@else
+    <a href="{{ route('login') }}" class="btn-cart-icon">
+        <i class="fa fa-shopping-cart"></i>
+    </a>
+@endauth
+
 </div>
 
                         </div>
