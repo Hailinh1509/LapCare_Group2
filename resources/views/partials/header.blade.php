@@ -86,14 +86,15 @@
                     <span class="label">Sản phẩm</span>
                 </a>
 
-                <div class="menu">
-                    <div class="item">Văn phòng</div>
-                    <div class="item">Gaming</div>
-                    <div class="item">Sinh viên</div>
-                    <div class="item">Cảm ứng</div>
-                    <div class="item">Đồ hoạ - Kỹ thuật</div>
-                    <div class="item">Phụ kiện</div>
-                </div>
+<div class="menu product-menu">
+    <a href="{{ route('products.list', ['maloaisp' => 'LT001']) }}" class="item">Văn phòng</a>
+    <a href="{{ route('products.list', ['maloaisp' => 'LT002']) }}" class="item">Gaming</a>
+    <a href="{{ route('products.list', ['maloaisp' => 'LT003']) }}" class="item">Sinh viên</a>
+    <a href="{{ route('products.list', ['maloaisp' => 'LT004']) }}" class="item">Cảm ứng</a>
+    <a href="{{ route('products.list', ['maloaisp' => 'LT005']) }}" class="item">Đồ hoạ - Kỹ thuật</a>
+    <a href="{{ route('products.list', ['maloaisp' => 'PK001']) }}" class="item">Phụ kiện</a>
+</div>
+
             </div>
 
             {{-- Tin tức --}}
