@@ -93,8 +93,16 @@
 
     <div class="text-center mb-4">
         <img src="{{ asset('images/logo.png') }}" 
-             alt="Logo"
-             class="sidebar-logo">
+            alt="Logo"
+            class="sidebar-logo">
+
+        @auth
+            <div class="mt-3 d-flex justify-content-center align-items-center"
+                style="font-size:17px; font-weight:600; color:#6a1b6a;">
+                <i class="fa-solid fa-user-tie me-2"></i>
+                {{ auth()->user()->name }}
+            </div>
+        @endauth
     </div>
 
     <ul class="nav flex-column">
