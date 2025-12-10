@@ -7,7 +7,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\ThanhtoanController;
-
+use App\Http\Controllers\AdminAuthController;
 
 // Trang chủ (home page)
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -52,6 +52,21 @@ Route::post('/dang-nhap', [PageController::class, 'processLogin'])->name('login.
 
 Route::get('/admin/login', [AdminAuthController::class, 'showLogin'])->name('admin.login');
 Route::post('/admin/login', [AdminAuthController::class, 'login'])->name('admin.login.process');
+
+use App\Http\Controllers\PasswordController;
+
+// Chỉ cho user đã đăng nhập
+Route::middleware('auth')->group(function () {
+
+    // Form đổi mật khẩu
+    Route::get('/password/change', [PasswordController::class, 'showChangeForm'])
+        ->name('password.change');
+
+    // Submit đổi mật khẩu
+    Route::post('/password/change', [PasswordController::class, 'change'])
+        ->name('password.change.submit');
+});
+
 
 
 
@@ -148,9 +163,11 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
 */
 // Trang danh sách sản phẩm
 Route::get('/products', [ProductsController::class, 'index'])->name('products.list');
+
 //Trang chi tiết sản phẩm
 use App\Http\Controllers\DetailController;
 Route::get('/products/{masp}', [DetailController::class, 'detail'])->name('products.detail');
+
 // Thêm vào giỏ hàng
 Route::post('/cart/add', [DetailController::class, 'addToCart'])
     ->middleware('auth')
@@ -161,6 +178,9 @@ Route::post('/buy-now', [DetailController::class, 'buyNow'])->name('buy.now');
 
 // Gửi đánh giá
 Route::post('/product/{masp}/review', [DetailController::class, 'addReview'])->name('product.review');
+
+
+
 
 
 /*
@@ -244,6 +264,7 @@ use App\Http\Controllers\ReviewController;
 
 Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::get('/reviews', [ReviewController::class, 'index'])->name('reviews.index');
+    Route::delete('/reviews/{id}', [ReviewController::class, 'destroy'])->name('reviews.delete');
 });
 
 /*

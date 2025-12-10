@@ -8,6 +8,8 @@ class sanpham extends Model
 {
     protected $table = 'sanpham';
     protected $primaryKey = 'masp';
+    public $incrementing = false;   // vì masp là varchar
+    protected $keyType = 'string';
     public $timestamps = false;
 
     public function loai()

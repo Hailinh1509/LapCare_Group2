@@ -146,8 +146,7 @@
 
                     <div class="user-dropdown">
                         <a href="{{ route('accounts.index') }}">Tài khoản của tôi</a>
-                        <a href="#">Đổi mật khẩu</a>
-
+                        <a href="{{ route('password.change') }}">Đổi mật khẩu</a>
                         <form action="{{ route('logout') }}" method="POST">
                             @csrf
                             <button type="submit" class="btn btn-danger">Đăng xuất</button>
