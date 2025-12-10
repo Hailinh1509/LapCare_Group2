@@ -118,8 +118,9 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
     Route::post('/categories/search', [CategoryController::class, 'search'])->name('categories.search');
     Route::get('/categories/create', [CategoryController::class, 'create'])->name('categories.create');
+    Route::get('/categories/{maloaisp}/edit', [CategoryController::class, 'edit'])->name('categories.edit');
     Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store');
-
+    Route::put('/categories/{maloaisp}', [CategoryController::class, 'update'])->name('categories.update');
 });
 
 /*

@@ -114,8 +114,11 @@ class AccountController extends Controller
         $request->validate([
             'masp'    => 'required|exists:sanpham,masp',
             'mahd'    => 'required|exists:donhang,madh',
-            'noidung' => 'nullable|string|max:500',
+            'noidung' => 'required|string|max:500',
             'rating'  => 'required|integer|min:1|max:5',
+        ],[
+            'rating.required'  => 'Vui lòng chọn số sao.',
+            'noidung.required' => 'Vui lòng viết nhận xét.', 
         ]);
 
         $userId = Auth::user()->matk;

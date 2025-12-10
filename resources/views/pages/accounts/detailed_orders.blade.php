@@ -213,29 +213,37 @@
                                     <p class="mb-0 mt-1" style="font-size: 13px;">{{ $existingRating->noidung }}</p>
                                 </div>
                             @else
-                                {{-- Form đánh giá --}}
-                                <form action="{{ route('accounts.rate_product', $order->madh) }}" method="POST" class="mt-2">
+                               {{-- Form đánh giá --}}
+                                <form action="{{ route('accounts.rate_product', $order->madh) }}" method="POST" class="mt-2 rating-form">
                                     @csrf
                                     <input type="hidden" name="mahd" value="{{ $order->madh }}">
                                     <input type="hidden" name="masp" value="{{ $ct->masp }}">
 
                                     <div class="star-rating mb-2" style="direction: rtl; display: inline-block;">
                                         @for($i=5; $i>=1; $i--)
-                                            <input type="radio" id="star{{ $ct->masp }}-{{ $i }}" name="rating" value="{{ $i }}">
+                                            <input type="radio" id="star{{ $ct->masp }}-{{ $i }}" name="rating" value="{{ $i }}" {{ old('rating') == $i ? 'checked' : '' }}>
                                             <label for="star{{ $ct->masp }}-{{ $i }}">★</label>
                                         @endfor
                                     </div>
+                                    @error('rating')
+                                        <div class="text-danger" style="font-size: 13px;">{{ $message }}</div>
+                                    @enderror
 
-                                    <textarea name="noidung" class="form-control form-control-sm mb-2" rows="2" placeholder="Viết nhận xét..."></textarea>
+                                    <textarea name="noidung" class="form-control form-control-sm mb-2" rows="2" placeholder="Viết nhận xét...">{{ old('noidung') }}</textarea>
+                                    @error('noidung')
+                                        <div class="text-danger" style="font-size: 13px;">{{ $message }}</div>
+                                    @enderror
 
                                     <button type="submit" class="btn-rate">Gửi đánh giá</button>
                                 </form>
+
                             @endif
                         </div>
                     </div>
                 </div>
                 @endforeach
             </div>
+
 
             <a href="{{ route('accounts.orders') }}" class="btn btn-outline-primary back-btn">
                 ← Quay lại danh sách đơn hàng

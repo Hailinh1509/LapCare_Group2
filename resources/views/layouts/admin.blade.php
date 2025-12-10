@@ -156,7 +156,6 @@
             <div class="collapse ps-2" id="accMenu">
                 <a class="dropdown-item" href="{{ route('employees.index') }}">Tài Khoản Nhân Viên</a>
                 <a class="dropdown-item" href="{{ route('customers.index') }}">Tài Khoản Khách Hàng</a>
-                <a class="dropdown-item" href="{{ route('employees.create') }}">Thêm Tài Khoản</a>
             </div>
         </li>
 
