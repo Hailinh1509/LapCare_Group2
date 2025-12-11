@@ -15,10 +15,11 @@ class PageController extends Controller
         return view('pages.news');
     }
 
-    public function contact()
-    {
-        return view('pages.contact');
-    }
+public function contact()
+{
+    return redirect()->away('https://www.facebook.com/profile.php?id=61584686252416');
+}
+
 
     public function cart()
     {

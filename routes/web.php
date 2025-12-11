@@ -81,24 +81,15 @@ Route::post('/thanh-toan/{masp}', [ThanhtoanController::class, 'process'])
     ->middleware('auth')   // optional nhưng nên thêm
     ->name('thanhtoan.process');
 
+Route::post('/checkout/submit', [ThanhtoanController::class, 'submit'])
+    ->name('checkout.submit')
+    ->middleware('auth');
+
+Route::get('/order-success', function () {
+    return view('pages.order_success');
+})->name('order.success');
 
 
-/*Route::get('/thanh-toan/{masp}', [ThanhtoanController::class, 'show'])
-    ->name('thanhtoan.show');
-
-Route::post('/thanh-toan/{masp}', [ThanhtoanController::class, 'process'])
-    ->name('thanhtoan.process');*/
-    
-    
-/*
-Route::get('/chinh-sach-giao-hang-thanh-toan', [PageController::class, 'policyShipping'])->name('policy.shipping');
-Route::get('/chinh-sach-bao-hanh', [PageController::class, 'policy.warranty'])->name('policy.warranty');
-Route::get('/chinh-sach-doi-tra', [PageController::class, 'policy.return'])->name('policy.return');
-Route::get('/chinh-sach-bao-mat-thong-tin', [PageController::class, 'policy.privacy'])->name('policy.privacy');
-Route::get('/chinh-sach-van-chuyen', [PageController::class, 'policy.delivery'])->name('policy.delivery');
-Route::get('/quy-che-hoat-dong', [PageController::class, 'policy.rules'])->name('policy.rules');
-
-*/
 
 
 /*

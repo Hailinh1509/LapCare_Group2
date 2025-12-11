@@ -98,11 +98,12 @@
     <span class="label">Tin tức</span>
   </a>
 
-  <a href="#" class="action" aria-label="Liên hệ">
-    <svg viewBox="0 0 25 25" fill="currentColor">
-      <path d="M6.62 10.79a15.05 15.05 0 006.59 6.59l2.2-2.2a1 1 0 011.11-.21c1.2.48 2.53.74 3.91.74a1 1 0 011 1v3.5a1 1 0 01-1 1C10.61 22 2 13.39 2 3.5a1 1 0 011-1H6.5a1 1 0 011 1c0 1.38.26 2.71.74 3.91a1 1 0 01-.21 1.11l-2.41 2.27z"/>
+  <a href="https://m.me/61584686252416" target="_blank" class="action">
+    <svg viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 2C6.48 2..." />
+    </svg>
     <span class="label">Liên hệ</span>
-  </a>
+</a>
 
 
     <!-- Search -->

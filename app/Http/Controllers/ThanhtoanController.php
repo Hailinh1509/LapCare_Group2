@@ -1,10 +1,11 @@
 <?php
 
 namespace App\Http\Controllers;
-
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;   // <-- THÊM DÒNG NÀY
+use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
+
+
 
 class ThanhtoanController extends Controller
 {
@@ -101,5 +102,56 @@ class ThanhtoanController extends Controller
 
         return redirect()->route('home')
             ->with('success', 'Đặt hàng thành công! Chúng tôi sẽ liên hệ với bạn sớm.');
+    }
+  
+
+public function submit(Request $request)
+    {
+        $user = Auth::user();
+
+        // 1. Lấy dữ liệu từ form
+        $masp   = $request->input('masp');          // từ input hidden
+        $diachi = $request->input('address');
+        $ghichu = $request->input('note');
+
+        // 2. Tạo mã đơn (VD: DH + timestamp)
+        $madh = 'DH' . now()->format('YmdHis');
+
+        // 3. Các thông tin cố định / tạm tính
+        $matk         = $user->matk ?? 'TK001';     // tuỳ bạn đang lưu thế nào
+        $phivc        = 30000;                      // phí ship tạm
+        $vat          = 0;                          // nếu có VAT thì tự tính
+        $pttt         = 'Chuyển khoản';
+        $ttthanhtoan  = 'Chờ xác nhận';
+        $ttvanchuyen  = 'Chờ giao hàng';
+
+        // 4. Lưu vào bảng DONHANG (KHÔNG có cột masp)
+        DB::table('donhang')->insert([
+            'madh'          => $madh,
+            'matk'          => $matk,
+            'ngaydat'       => now()->toDateString(),
+            'diachigiaohang'=> $diachi,
+            'phivanchuyen'  => $phivc,
+            'VAT'           => $vat,
+            'pttt'          => $pttt,
+            'ttthanhtoan'   => $ttthanhtoan,
+            'ttvanchuyen'   => $ttvanchuyen,
+            'ghichu'        => $ghichu,
+        ]);
+
+        // 5. Lưu vào bảng CHITIETDONHANG – gắn sản phẩm với đơn
+        // (nếu bạn dùng giỏ nhiều sản phẩm thì sau này lặp theo giỏ,
+        // hiện tại "mua ngay 1 sản phẩm" nên để 1 dòng)
+        DB::table('chitietdonhang')->insert([
+            'mahd'    => $madh,
+            'masp'    => $masp,
+            'soluong' => 1,
+            'dongia'  => 0,   // có thể truyền giá thực from view nếu cần
+        ]);
+
+        // 6. Chuyển sang trang cảm ơn
+        return redirect()
+            ->route('order.success')
+            ->with('success', 'Đặt hàng thành công!');
     }
 }

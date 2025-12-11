@@ -349,14 +349,15 @@
                                         Chi tiết
                                     </a>
                                     <form action="{{ route('cart.add') }}" method="POST" class="d-inline">
-                                        @csrf
-                                        <input type="hidden" name="product_id" value="{{ $p->masp }}">
-                                        <input type="hidden" name="quantity" value="1">
-                                        
-                                        <button type="submit" class="btn btn-danger btn-sm flex-grow-1 btn-add-home">
-                                            Thêm
-                                        </button>
-                                    </form>
+    @csrf
+    <input type="hidden" name="masp" value="{{ $p->masp }}">
+    <input type="hidden" name="soluong" value="1">
+    
+    <button type="submit" class="btn btn-danger btn-sm flex-grow-1 btn-add-home">
+        Thêm
+    </button>
+</form>
+
                                 </div>
                             </div>
                         </div>
@@ -409,6 +410,10 @@
 @endif
 
 @include('footer.footer')
+<<<<<<< HEAD
+=======
+
+>>>>>>> 97c7c37 (Hoan thien chuc nang thanh toan & gio hang)
 
  {{-- Nút Messenger nổi bên phải --}}
     @include('partials.messenger')
