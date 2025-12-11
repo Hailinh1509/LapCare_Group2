@@ -408,7 +408,7 @@
 </script>
 @endif
 
-@include('partials.footer')
+@include('footer.footer')
 
  {{-- Nút Messenger nổi bên phải --}}
     @include('partials.messenger')

@@ -88,7 +88,7 @@ $product_id = $request->product_id;
     }
 
     // Kiểm tra sản phẩm đã có trong giỏ chưa
-    $existing = GioHang::where('matk', $user->id)
+    $existing = GioHang::where('matk', $user->matk)
             ->where('masp', $product_id)
             ->first();
 
@@ -99,7 +99,7 @@ $product_id = $request->product_id;
     } else {
         // Thêm mới
         GioHang::create([
-            'matk' => $user->id,
+            'matk' => $user->matk,
             'masp' => $product_id,
             'soluong' => $quantity,
             'ngaychon' => now(),

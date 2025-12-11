@@ -103,9 +103,6 @@
             </form>
 
         </div>
-           <form action="{{ route('thanhtoan.show', ['masp' => $product->masp]) }}" method="GET" class="form-buy">
-            <button type="submit" class="btn-buy-now">Mua ngay</button>
-            </form>
             </div> <!-- end col-md-6 -->
         </div> <!-- end row -->
     <!-- Phần content-container -->

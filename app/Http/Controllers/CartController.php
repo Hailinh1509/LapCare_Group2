@@ -34,7 +34,7 @@ class CartController extends Controller
 
     public function updateQty(Request $request)
 {
-    GioHang::where('matk', auth()->id())
+    GioHang::where('matk', auth()->user()->matk)
         ->where('masp', $request->matk)
         ->update(['soluong' => $request->soluong]);
 
