@@ -13,7 +13,7 @@ use App\Http\Controllers\AdminAuthController;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 // Trang chủ cho người dùng đã đăng nhập
 Route::get('/home-logged', [HomeController::class, 'indexLogged'])->name('home.logged');
-
+//Route::get('/home-logged', [HomeController::class, 'indexLogged'])->name('home.logged');
 
 // Trang chi tiết sản phẩm cho người dùng
 Route::get('/san-pham/{masp}', [PageController::class, 'detail'])
@@ -178,13 +178,16 @@ Route::get('/products', [ProductsController::class, 'index'])->name('products.li
 use App\Http\Controllers\DetailController;
 Route::get('/products/{masp}', [DetailController::class, 'detail'])->name('products.detail');
 
+
 // Thêm vào giỏ hàng
 Route::post('/cart/add', [DetailController::class, 'addToCart'])
     ->middleware('auth')
     ->name('cart.add');
 
 // Mua ngay
+
 Route::post('/buy-now/{masp}', [ThanhtoanController::class, 'show'])->name('buy.now');
+
 // Gửi đánh giá
 Route::post('/product/{masp}/review', [DetailController::class, 'addReview'])->name('product.review');
 

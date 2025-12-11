@@ -103,7 +103,9 @@
             </form>
 
         </div>
-
+           <form action="{{ route('thanhtoan.show', ['masp' => $product->masp]) }}" method="GET" class="form-buy">
+            <button type="submit" class="btn-buy-now">Mua ngay</button>
+            </form>
             </div> <!-- end col-md-6 -->
         </div> <!-- end row -->
     <!-- Phần content-container -->
@@ -252,7 +254,7 @@
                     <div class="stars mr-2">
                         <p>
                             <span style="font-size:1.2em; font-weight:bold; color:#333;">
-                                {{ $rv->User->name ?? 'Người dùng' }}
+                                {{ $rv->user->name ?? 'Người dùng' }}
                             </span>
                             <span style="font-size:1em; color:#777;">
                                 {{ $rv->ngaytao ?? '' }}

@@ -32,24 +32,6 @@ class CartController extends Controller
         return view('pages.cart', compact('cartItems'));
     }
 
-    // ============================
-    // ⭐ CẬP NHẬT SỐ LƯỢNG
-    // ============================
-    /*public function update(Request $request)
-    {
-        $user = auth()->user();
-        if (!$user) return redirect('/login');
-
-        foreach ($request->qty as $masp => $soluong) {
-            $soluong = max(1, (int) $soluong);
-
-            GioHang::where('matk', $user->id)
-                ->where('masp', $masp)
-                ->update(['soluong' => $soluong]);
-        }
-
-        return back()->with('success', 'Cập nhật giỏ hàng thành công!');
-    }*/
     public function updateQty(Request $request)
 {
     GioHang::where('matk', auth()->id())

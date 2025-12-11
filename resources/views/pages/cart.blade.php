@@ -112,7 +112,6 @@
             <h3>Giỏ hàng đang trống</h3>
             <a href="{{ route('products.list') }}" class="cart-btn btn-danger" style="margin-top: 20px;
     display: inline-block;">Mua sắm ngay</a>
-        </div>
     @else
 
     <table class="cart-table">
@@ -130,7 +129,7 @@
 
             @foreach ($cartItems as $item)
                 @php
-                    $dongia = $item->giasp*(1-$item->khuyenmai);
+                    $dongia = $item->giasp * (1-$item->khuyenmai);
                     $thanhtien = $item->soluong * $dongia;
                 @endphp
 
