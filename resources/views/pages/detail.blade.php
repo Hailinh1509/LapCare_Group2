@@ -23,8 +23,7 @@
     border-radius: 6px; /* Nếu muốn vuông bo góc nhẹ */
     cursor: pointer;
 }
-
-
+.small.text-muted { display: none !important; }
 </style>
 </head>
 <body>
@@ -137,7 +136,7 @@
                     <div class="card d-block hvr-glow">
 
 
-                        <a href="{{ url('/product/'.$sp->masp) }}" style="text-decoration:none;">
+                        <a href="{{ url('/products/'.$sp->masp) }}" style="text-decoration:none;">
                             <img src="{{ asset($sp->hinhanh) }}" class="card-img-top product-image" alt="{{ $sp->tensp }}">
 
 
@@ -280,25 +279,7 @@
         {{-- PHÂN TRANG Ở NGOÀI VÒNG LẶP --}}
         <div class="mt-3 d-flex justify-content-center">
             {{ $reviews->links('pagination::bootstrap-5') }}
-        </div> <!--chỉ hiện phân trang khi số đánh giá >5-do đang cấu hình paginate(5)mục productcontroller.php-->
-        <!--tự cầu hình thì như sau-->
-        <div class="pagination-custom">
-            <!-- Nút trước -->
-            @if ($reviews->currentPage() > 1)
-                <a href="{{ $reviews->previousPageUrl() }}" class="page-btn" >&lt;</a>
-            @else
-                <span class="page-btn disabled" style="border: 1px solid red;">&lt;</span>
-            @endif
-
-            <!-- Số trang hiện tại / tổng số trang -->
-                <span>{{ $reviews->currentPage() }} / {{ $reviews->lastPage() }}</span>
-            <!-- Nút sau -->
-            @if ($reviews->currentPage() < $reviews->lastPage())
-                <a href="{{ $reviews->nextPageUrl() }}" class="page-btn" >&gt;</a>
-            @else
-                <span class="page-btn disabled" >&gt;</span>
-            @endif
-
+        </div> 
 </div>
     @endif
 

@@ -75,6 +75,8 @@
         cursor: pointer;
         border-radius: 4px;
         font-size: 15px;
+        height:44px;
+        text-decoration: none;
     }
 
     .cart-btn:hover {
@@ -94,6 +96,7 @@
     .price-highlight {
         color: #d60000;
     }
+    
 </style>
 </head>
 <body>
@@ -107,19 +110,20 @@
     @if ($cartItems->isEmpty())
         <div style="text-align:center; padding:40px 0;">
             <h3>Giỏ hàng đang trống</h3>
-            <a href="{{ route('products.list') }}" class="cart-btn btn-light">Mua sắm ngay</a>
+            <a href="{{ route('products.list') }}" class="cart-btn btn-danger" style="margin-top: 20px;
+    display: inline-block;">Mua sắm ngay</a>
         </div>
     @else
 
     <table class="cart-table">
-        <thead>
-            <tr>
-                <th width="60">Chọn</th>
-                <th>Sản phẩm</th>
-                <th width="150">Đơn giá</th>
-                <th width="150">Số lượng</th>
-                <th width="150">Thành tiền</th>
-                <th width="100">Xóa</th>
+        <thead >
+            <tr >
+                <th width="60" style="background: #029c8aff !important; color: white;">Chọn</th>
+                <th style="background: #029c8aff !important; color: white;">Sản phẩm</th>
+                <th width="150" style="background: #029c8aff !important; color: white;">Đơn giá</th>
+                <th width="150" style="background: #029c8aff !important; color: white;">Số lượng</th>
+                <th width="150" style="background: #029c8aff !important; color: white;">Thành tiền</th>
+                <th width="100" style="background: #029c8aff !important; color: white;">Xóa</th>
             </tr>
         </thead>
         <tbody>
@@ -178,10 +182,10 @@
         <a href="{{ route('products.list') }}" class="cart-btn btn-light">Tiếp tục mua hàng</a>
         <a href="{{ route('cart.clear') }}" class="cart-btn btn-danger">Xóa giỏ hàng</a>
         <!--<a href="#" class="cart-btn btn-success" id="checkout-btn">Đặt hàng</a>-->
-        <form action="{{ route('cart.checkout') }}" method="POST" id="checkout-form">
+        <form action="{{ route('cart.checkout') }}" method="POST" id="checkout-form" class="">
             @csrf
             <input type="hidden" name="masp" id="selected-products">
-            <button type="submit" class="cart-btn btn-success">Đặt hàng</button>
+            <button type="submit" class="cart-btn btn-success ">Đặt hàng</button>
         </form>
     </div>
 
