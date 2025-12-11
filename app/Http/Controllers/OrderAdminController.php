@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Donhang;
+use App\Models\DonHang;
 use App\Models\Chitietdonhang;
 use Illuminate\Http\Request;
 
@@ -11,13 +11,17 @@ class OrderAdminController extends Controller
     /** Danh sách đơn hàng */
 public function index()
 {
-$orders = Donhang::with('chitiet')->get();
+$orders = DonHang::with('chitiet')->get();
 
 foreach ($orders as $order) {
-    $order->tongtien = $order->chitiet->sum(function($ct){
+
+    $productTotal = $order->chitiet->sum(function($ct){
         return $ct->soluong * $ct->dongia;
     });
+
+    $order->tongtien = $productTotal - $order->VAT - $order->phivanchuyen;
 }
+
 
 
     return view('pages.orders.ordersAdmin', compact('orders'), [
@@ -30,7 +34,7 @@ foreach ($orders as $order) {
     /** Chi tiết đơn hàng */
     public function detail($madon)
     {
-        $order = Donhang::findOrFail($madon);
+        $order = DonHang::findOrFail($madon);
         $details = Chitietdonhang::where('mahd', $madon)->get();
         $order->tongtien = $order->phivanchuyen + 
                    $details->sum(function($d) {
@@ -53,7 +57,7 @@ public function search(Request $request)
     // 2. Tìm đơn hàng theo:
     //  - mã đơn
     //  - hoặc mã khách nằm trong danh sách tìm được
-    $orders = Donhang::with(['user', 'chitiet'])
+    $orders = DonHang::with(['user', 'chitiet'])
         ->where('madh', 'LIKE', "%{$keyword}%")
         ->orWhereIn('matk', $userIds)
         ->get();
@@ -68,6 +72,32 @@ public function search(Request $request)
     return view('pages.orders.ordersAdmin', compact('orders', 'keyword'), [
             'title' => 'Kết quả tìm kiếm đơn hàng'
         ]);
+}
+public function updatePayment(Request $request)
+{
+    $order = DonHang::find($request->madh);
+
+    if ($order->ttthanhtoan == 'đã thanh toán') {
+        return back()->with('error', 'Đơn hàng này đã thanh toán, không thể thay đổi!');
+    }
+
+    $order->ttthanhtoan = $request->ttthanhtoan;
+    $order->save();
+
+    return back()->with('success', 'Cập nhật trạng thái thanh toán thành công!');
+}
+public function updateShipping(Request $request)
+{
+    $order = DonHang::find($request->madh);
+
+    if ($order->ttvanchuyen == 'đã giao hàng') {
+        return back()->with('error', 'Đơn hàng này đã giao, không thể thay đổi!');
+    }
+
+    $order->ttvanchuyen = $request->ttvanchuyen;
+    $order->save();
+
+    return back()->with('success', 'Cập nhật trạng thái vận chuyển thành công!');
 }
 
 

@@ -30,3 +30,4 @@ class ImportDetailAdminController extends Controller
         ));
     }
 }
+?>

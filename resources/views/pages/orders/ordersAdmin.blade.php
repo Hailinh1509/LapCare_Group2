@@ -41,6 +41,13 @@
     background-color: #1101c8ff;
     border: none;
 }
+.btn-update-sm {
+    padding: 3px 10px;      /* thu nhỏ nút */
+    font-size: 12px;        /* chữ nhỏ lại */
+    line-height: 1;         /* giảm chiều cao */
+    border-radius: 6px;     /* bo nhẹ đẹp */
+}
+
 
 </style>
 
@@ -93,21 +100,72 @@
 
                 <td>{{ number_format($order->tongtien ?? 0, 0, ',', '.') }}đ</td>
 
-                <td>
-                    @if($order->ttthanhtoan == 'chưa thanh toán')
-                        <span class="badge-status badge-unpaid">chưa thanh toán</span>
-                    @else
-                        <span class="badge-status badge-paid">Đã thanh toán</span>
-                    @endif
-                </td>
+                {{-- ✔ THANH TOÁN --}}
+<td>
+    <form action="{{ route('orders.updatePayment') }}" method="POST"
+          class="d-flex align-items-center gap-2">
+        @csrf
 
-                <td>
-                    @if($order->ttvanchuyen == 'chưa giao hàng')
-                        <span class="badge-status badge-shipping-no">chưa giao hàng</span>
-                    @else
-                        <span class="badge-status badge-shipping-yes">Đã giao hàng</span>
-                    @endif
-                </td>
+        <input type="hidden" name="madh" value="{{ $order->madh }}">
+
+        <select name="ttthanhtoan" class="form-select form-select-sm"
+                {{ $order->ttthanhtoan == 'đã thanh toán' ? 'disabled' : '' }}>
+            <option value="chưa thanh toán"
+                {{ $order->ttthanhtoan == 'chưa thanh toán' ? 'selected' : '' }}>
+                Chưa thanh toán
+            </option>
+
+            <option value="đã thanh toán"
+                {{ $order->ttthanhtoan == 'đã thanh toán' ? 'selected' : '' }}>
+                Đã thanh toán
+            </option>
+        </select>
+
+        @if($order->ttthanhtoan != 'đã thanh toán')
+            <button class="btn btn-success btn-update-sm">Cập nhật</button>
+
+        @endif
+    </form>
+</td>
+
+
+{{-- ✔ VẬN CHUYỂN --}}
+<td>
+    <form action="{{ route('orders.updateShipping') }}" method="POST"
+          class="d-flex align-items-center gap-2">
+        @csrf
+
+        <input type="hidden" name="madh" value="{{ $order->madh }}">
+
+        <select name="ttvanchuyen" class="form-select form-select-sm"
+                {{ $order->ttvanchuyen == 'đã giao hàng' ? 'disabled' : '' }}>
+
+            <option value="đang xử lý"
+                {{ $order->ttvanchuyen == 'đang xử lý' ? 'selected' : '' }}>
+                Đang xử lý
+            </option>
+
+            <option value="đang giao"
+                {{ $order->ttvanchuyen == 'đang giao' ? 'selected' : '' }}>
+                Đang giao
+            </option>
+
+            <option value="đã giao hàng"
+                {{ $order->ttvanchuyen == 'đã giao hàng' ? 'selected' : '' }}>
+                Đã giao hàng
+            </option>
+
+        </select>
+
+        @if($order->ttvanchuyen != 'đã giao hàng')
+            <button class="btn btn-success btn-update-sm">Cập nhật</button>
+
+        @endif
+    </form>
+</td>
+
+
+
 
                 <td>
                     <a href="{{ route('orders.detail', $order->madh) }}" class="btn btn-primary btn-sm">

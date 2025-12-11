@@ -66,7 +66,7 @@
                 <th>SĐT</th>
                 <th>Địa chỉ</th>
                 <th>Vai trò</th>
-                <th width="120">Thao tác</th>
+                
             </tr>
         </thead>
 
@@ -80,23 +80,7 @@
                 <td>{{ $emp->diachi }}</td>
                 <td><span class="badge bg-primary">Nhân viên</span></td>
 
-                <td class="text-center">
-                    <a href="{{ route('employees.edit', $emp->id) }}" 
-                       class="btn btn-warning btn-sm">
-                        <i class="fa fa-edit"></i>
-                    </a>
-
-                    <form action="{{ route('employees.destroy', $emp->id) }}"
-                          method="POST"
-                          style="display:inline;">
-                        @csrf
-                        @method('DELETE')
-                        <button onclick="return confirm('Bạn chắc chắn muốn xoá nhân viên này?')"
-                                class="btn btn-danger btn-sm">
-                            <i class="fa fa-trash"></i>
-                        </button>
-                    </form>
-                </td>
+                
             </tr>
 
             @empty

@@ -307,11 +307,22 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
 |--------------------------------------------------------------------------
 */
 use App\Http\Controllers\OrderAdminController;
+use App\Http\Controllers\OrderDetailAdminController;
 
 Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
+
     Route::get('/orders', [OrderAdminController::class, 'index'])->name('orders.index');
     Route::get('/orders/search', [OrderAdminController::class, 'search'])->name('orders.search');
-    Route::get('/orders/{madon}', [OrderAdminController::class, 'detail'])->name('orders.detail');
+
+    //
+    Route::get('/orders/{madh}', [OrderDetailAdminController::class, 'show'])
+        ->name('orders.detail');
+
+    Route::post('/orders/update-payment', [OrderAdminController::class, 'updatePayment'])
+        ->name('orders.updatePayment');
+
+    Route::post('/orders/update-shipping', [OrderAdminController::class, 'updateShipping'])
+        ->name('orders.updateShipping');
 });
 
 

@@ -2,31 +2,35 @@
 namespace App\Http\Controllers;
 
 use App\Models\DonHang;
-use App\Models\ChiTietDonHang;
 use Illuminate\Http\Request;
 
 class OrderDetailAdminController extends Controller
 {
     public function show($madh)
     {
-        // Lấy đơn hàng + user + chi tiết
-        $order = DonHang::with(['user', 'chitiet.product'])
-                        ->where('madh', $madh)
-                        ->firstOrFail();
+        $order = DonHang::with(['user','chitiet.product'])
+                ->where('madh', $madh)
+                ->firstOrFail();
 
-        // Tính tạm tính
-        $tamtinh = $order->chitiet->sum(function ($ct) {
-            return $ct->soluong * $ct->dongia;
+        $details = $order->chitiet ?? collect();
+
+        $tongSanPham = $details->sum(function($ct){
+            return (float)$ct->soluong * (float)$ct->dongia;
         });
 
-        // Tổng tiền (tạm tính + phí ship)
-        $tongtien = $tamtinh + $order->phivanchuyen;
+        $vat  = (float) ($order->VAT ?? 0);
+        $ship = (float) ($order->phivanchuyen ?? 0);
 
-        return view('pages.orders.orderDetailAdmin', compact(
-            'order', 'tamtinh', 'tongtien'
-        ));
+        // Thành tiền cuối
+        $thanhtien = $tongSanPham - $vat - $ship;
+
+        return view(
+            'pages.orders.orderDetailAdmin',
+            compact('order','details','tongSanPham','vat','ship','thanhtien'),
+            [
+                'title' => 'Chi tiết đơn đặt hàng'
+            ]
+        );
     }
 }
-
-
 ?>

@@ -105,7 +105,7 @@
             <td>
     <form action="{{ route('imports.updatePayment') }}" method="POST" class="d-flex gap-2">
         @csrf
-
+ 
         <input type="hidden" name="madn" value="{{ $order->madn }}">
 
         <select name="ttthanhtoan" class="form-select form-select-sm"

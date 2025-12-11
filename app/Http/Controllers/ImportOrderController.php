@@ -88,7 +88,7 @@ public function updatePayment(Request $request)
     $order->ttthanhtoan = $request->ttthanhtoan;
     $order->save();
 
-    return back()->with('success', 'Cập nhật trạng thái thanh toán thành công!');
+    return back();
 }
 
 //form nhap don
@@ -112,8 +112,24 @@ public function store(Request $request)
         'items.*.soluong' => 'required|numeric|min:1',
         'items.*.gianhap' => 'required|numeric|min:0',
     ]);
+ // ---- KIỂM TRA GIÁ NHẬP ≤ GIÁ BÁN ----
+foreach ($request->items as $item) {
+    $product = \App\Models\SanPham::find($item['masp']);
 
-    // 1️⃣ TẠO ĐƠN NHẬP
+    if (!$product) continue;
+
+    // GIÁ NHẬP KHÔNG ĐƯỢC LỚN HƠN GIÁ BÁN (giasp trong bảng sanpham)
+    if ($item['gianhap'] > $product->giasp) {
+        return back()
+            ->withErrors([
+                "Giá nhập của sản phẩm '{$product->tensp}' không được lớn hơn giá bán ({$product->giasp})."
+            ])
+            ->withInput();
+    }
+}
+
+
+    // 1️ TẠO ĐƠN NHẬP
     $donnhap = Donnhap::create([
         'madn' => $request->madn,
         'mancc' => $request->mancc,
@@ -122,7 +138,7 @@ public function store(Request $request)
         'ttthanhtoan' => 'chưa thanh toán',
     ]);
 
-    // 2️⃣ LƯU CHI TIẾT ĐƠN NHẬP
+    // 2️ LƯU CHI TIẾT ĐƠN NHẬP
     foreach ($request->items as $item) {
         Chitietdonnhap::create([
             'madn' => $request->madn,
@@ -131,15 +147,14 @@ public function store(Request $request)
             'gianhap' => $item['gianhap'],
         ]);
 
-        // 3️⃣ CỘNG VÀO TỒN KHO
+        // 3️ CỘNG VÀO TỒN KHO
         \DB::table('sanpham')
             ->where('masp', $item['masp'])
             ->increment('soluong', $item['soluong']);
     }
 
-    return redirect()->route('imports.index')
-        ->with('success', 'Thêm đơn nhập thành công!');
 }
+
 
 
 }

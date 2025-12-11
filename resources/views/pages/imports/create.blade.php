@@ -58,7 +58,7 @@
 
                 <div class="col-md-3">
                     <input type="number" name="items[0][gianhap]" class="form-control"
-                           placeholder="Giá nhập" min="0" required>
+                           placeholder="Giá nhập" min="1" required>
                 </div>
 
                 <div class="col-md-2">
@@ -79,7 +79,7 @@
 {{-- Script thêm dòng sản phẩm --}}
 <script>
 let index = 1;
-
+ 
 document.getElementById('addRow').addEventListener('click', function () {
     let html = `
         <div class="row g-3 mb-2 item-row">
