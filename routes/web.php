@@ -15,8 +15,6 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/home-logged', [HomeController::class, 'indexLogged'])->name('home.logged');
 
 
-Route::get('/san-pham', [PageController::class, 'products'])->name('products.index');
-
 // Trang chi tiết sản phẩm cho người dùng
 Route::get('/san-pham/{masp}', [PageController::class, 'detail'])
     ->name('product.detail');
