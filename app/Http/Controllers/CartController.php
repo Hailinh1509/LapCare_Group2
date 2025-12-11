@@ -18,7 +18,7 @@ class CartController extends Controller
         }
 
         // Lấy các sản phẩm từ giỏ hàng + join bảng sanpham
-        $cartItems = GioHang::where('matk', $user->id)
+        $cartItems = GioHang::where('matk', $user->matk)
             ->join('sanpham', 'giohang.masp', '=', 'sanpham.masp')
             ->select(
                 'giohang.*',
@@ -35,7 +35,7 @@ class CartController extends Controller
     public function updateQty(Request $request)
 {
     GioHang::where('matk', auth()->id())
-        ->where('masp', $request->masp)
+        ->where('masp', $request->matk)
         ->update(['soluong' => $request->soluong]);
 
     return response()->json(['ok' => true]);
@@ -49,7 +49,7 @@ class CartController extends Controller
         $user = auth()->user();
         if (!$user) return redirect('/login');
 
-        GioHang::where('matk', $user->id)
+        GioHang::where('matk', $user->matk)
             ->where('masp', $masp)
             ->delete();
 
@@ -65,7 +65,7 @@ class CartController extends Controller
         $user = auth()->user();
         if (!$user) return redirect('/login');
 
-        GioHang::where('matk', $user->id)->delete();
+        GioHang::where('matk', $user->matk)->delete();
 
         return back()->with('success', 'Đã xoá toàn bộ giỏ hàng!');
     }
