@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Product;
+use App\Models\loaisp;
 
 class AdminProductsController extends Controller
 {
@@ -32,8 +33,10 @@ class AdminProductsController extends Controller
     // ============================
     public function create()
     {
+        $loaisp = loaisp::all();
         return view('pages.products.create', [
-            'title' => 'Thêm Sản Phẩm'
+            'title' => 'Thêm Sản Phẩm',
+            'loaisp' => $loaisp
         ]);
     }
 
@@ -93,11 +96,13 @@ class AdminProductsController extends Controller
     public function edit($masp)
     {
         $product = Product::findOrFail($masp);
+        $loaisp = loaisp::all();
 
         return view('pages.products.edit', [
-            'title' => 'Sửa Sản Phẩm',
-            'product' => $product,
-        ]);
+        'title' => 'Sửa Sản Phẩm',
+        'product' => $product,
+        'loaisp' => $loaisp
+    ]);
     }
 
     public function update(Request $request, $masp)

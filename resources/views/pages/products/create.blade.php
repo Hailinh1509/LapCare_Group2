@@ -40,13 +40,24 @@
 
                      {{-- Mã loại (maloaisp) --}}
                     <div class="col-md-6 mb-3">
-                        <label class="form-label">Mã Loại Sản Phẩm</label>
-                        <input type="text" name="maloaisp" class="form-control @error('maloaisp') is-invalid @enderror"
-                               value="{{ old('maloaisp') }}" required>
+                        <label class="form-label">Loại Sản Phẩm</label>
+                        <select name="maloaisp" 
+                                class="form-control @error('maloaisp') is-invalid @enderror" required>
+                            <option value="">-- Chọn loại sản phẩm --</option>
+
+                            @foreach($loaisp as $loai)
+                                <option value="{{ $loai->maloaisp }}"
+                                    {{ old('maloaisp') == $loai->maloaisp ? 'selected' : '' }}>
+                                    {{ $loai->tenloaisp }}
+                                </option>
+                            @endforeach
+                        </select>
+
                         @error('maloaisp')
                             <small class="text-danger">{{ $message }}</small>
                         @enderror
                     </div>
+
 
                     {{-- Tên SP --}}
                     <div class="col-md-12 mb-3">

@@ -32,8 +32,15 @@
                 </div>
 
                 <div class="mb-3">
-                    <label>Mã Loại SP</label>
-                    <input type="text" name="maloaisp" class="form-control" value="{{ old('maloaisp', $product->maloaisp) }}">
+                    <label>Loại Sản Phẩm</label>
+                    <select name="maloaisp" class="form-control">
+                        @foreach($loaisp as $loai)
+                            <option value="{{ $loai->maloaisp }}"
+                                {{ $product->maloaisp == $loai->maloaisp ? 'selected' : '' }}>
+                                {{ $loai->tenloaisp }}
+                            </option>
+                        @endforeach
+                    </select>
                 </div>
 
                 <div class="mb-3">
