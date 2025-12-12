@@ -62,9 +62,13 @@ public function create()
     public function store(Request $request)
     {
         $request->validate([
-            'maloaisp' => 'required|max:5',
-            'tenloaisp' => 'required|max:255'
-        ]);
+    'maloaisp' => 'required|max:5|unique:loaisp,maloaisp',
+    'tenloaisp' => 'required|max:255'
+], [
+    'maloaisp.unique' => 'Mã loại sản phẩm đã tồn tại.',
+    'maloaisp.required' => 'Vui lòng nhập mã loại sản phẩm.',
+    'tenloaisp.required' => 'Vui lòng nhập tên loại sản phẩm.',
+]);
 
         loaisp::create([
             'maloaisp' => $request->maloaisp,
@@ -87,9 +91,7 @@ public function create()
     $category->tenloaisp = $request->tenloaisp;
     $category->ngaysua = now();
     $category->save();
-
     return redirect()->route('categories.index')->with('success', 'Cập nhật thành công!');
 }
 
 }
-
