@@ -52,11 +52,17 @@ class AdminProductsController extends Controller
             'soluong'   => 'required|integer|min:0',
             'giasp'     => 'required|numeric|min:0',
             'hinhanh'   => 'required|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'hang'      => 'required|max:100',
+            'thoigian'  => 'required|max:50',
+            'mota'      => 'required',
         ], [
             'masp.required' => 'Vui lòng nhập mã sản phẩm.',
             'masp.unique' => 'Mã sản phẩm đã tồn tại.',
             'hinhanh.required' => 'Vui lòng chọn ảnh sản phẩm.',
             'hinhanh.image' => 'File tải lên phải là ảnh.',
+            'hang.required'    => 'Vui lòng nhập hãng sản phẩm.',
+            'thoigian.required'=> 'Vui lòng nhập thời gian bảo hành.',
+            'mota.required'    => 'Vui lòng nhập mô tả sản phẩm.',
         ]);
 
         $product = new Product();
