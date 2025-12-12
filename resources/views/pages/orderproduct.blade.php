@@ -78,9 +78,8 @@
                     @foreach($products as $item)
                         <div class="product-summary mb-2 d-flex gap-3 align-items-center">
 
-                            {{-- Ảnh --}}
-                            @php
-                                $img = 'assets/images/' . ($item->hinhanh ?? 'noimg.jpg');
+                        @php
+                                 $img = $item->hinhanh ? $item->hinhanh : 'assets/images/noimg.jpg';
                             @endphp
 
                             <img src="{{ asset($img) }}">

@@ -44,17 +44,17 @@ class ThanhtoanController extends Controller
     }
     $user = auth()->user();
     // Lấy các sản phẩm tương ứng
-    $products = DB::table('giohang')
-        ->where('giohang.matk', $user->id)
-        ->whereIn('giohang.masp', $maspList)
-        ->join('sanpham', 'giohang.masp', '=', 'sanpham.masp')
-        ->select(
-            'giohang.soluong',      // số lượng người dùng chọn
-            'giohang.masp',
-            'sanpham.tensp',
-            'sanpham.giasp',
-            'sanpham.khuyenmai',
-            'sanpham.hinhanh'
+        $products = DB::table('giohang')
+                ->where('giohang.matk', $user->matk)
+                ->whereIn('giohang.masp', $maspList)
+                ->join('sanpham', 'giohang.masp', '=', 'sanpham.masp')
+                ->select(
+                    'giohang.soluong',      // số lượng người dùng chọn
+                    'giohang.masp',
+                    'sanpham.tensp',
+                    'sanpham.giasp',
+                    'sanpham.khuyenmai',
+                    'sanpham.hinhanh'
         )
         ->get();
 
