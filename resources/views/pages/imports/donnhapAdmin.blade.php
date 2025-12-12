@@ -79,7 +79,7 @@
             <th>Mã đơn</th>
             <th>Nhà cung cấp</th>
             <th>Ngày nhập</th>
-            <th>Tổng tiền</th>
+            <th>Thành tiền</th>
             <th>Thanh toán</th>
             <th>Chi tiết</th>
         </tr>

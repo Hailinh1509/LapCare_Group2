@@ -85,7 +85,7 @@
             <th class="product-col">Sản phẩm</th>
             <th>Số lượng</th>
             <th>Đơn giá</th>
-            <th>Thành tiền</th>
+            <th>Tổng tiền</th>
         </tr>
     </thead>
     <tbody>
