@@ -266,10 +266,10 @@
                                 @endif
 
                                 {{-- Tạm thời vẫn để link cũ, khi có route Laravel thì đổi sau --}}
-                                <a href="{{ route('thanhtoan.show', ['masp' => $p->masp]) }}"
-                    class="btn btn-danger btn-sm w-100 mt-1">
-                    Mua ngay
-                        </a>
+                                <a href="{{ route('buy.now', ['masp' => $p->masp]) }}" class="btn btn-danger btn-sm w-100 mt-1">
+    Mua ngay
+</a>
+
 
                             </div>
                         </div>
@@ -344,7 +344,7 @@
                                 </p>
 
                                 <div class="mt-auto d-flex gap-2">
-                                    <a href="product.php?masp={{ urlencode($p->masp) }}"
+                                    <a href="{{ route('products.detail', ['masp' => $p->masp]) }}"
                                        class="btn btn-outline-secondary btn-sm flex-grow-1 btn-detail-home">
                                         Chi tiết
                                     </a>
@@ -410,10 +410,6 @@
 @endif
 
 @include('footer.footer')
-<<<<<<< HEAD
-=======
-
->>>>>>> 97c7c37 (Hoan thien chuc nang thanh toan & gio hang)
 
  {{-- Nút Messenger nổi bên phải --}}
     @include('partials.messenger')

@@ -1,157 +1,178 @@
 <?php
 
 namespace App\Http\Controllers;
-use Illuminate\Support\Facades\Auth;   // <-- THÊM DÒNG NÀY
+
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
-
-
 class ThanhtoanController extends Controller
 {
-    public function show($masp)
+    /**
+     * GET /checkout
+     * Hiển thị trang thanh toán theo GIỎ HÀNG
+     */
+    public function checkout()
     {
-        $product = DB::table('sanpham')->where('masp', $masp)->first();
-
-        if (!$product) {
-            abort(404);
+        if (!Auth::check()) {
+            return redirect()->route('login')
+                ->with('error', 'Vui lòng đăng nhập để thanh toán.');
         }
 
-        // Lấy user đang đăng nhập
         $user = Auth::user();
+        $matk = $user->matk;
 
-        // Lấy thông tin từ tài khoản (đổi tên cột theo DB của bạn)
-        $customerName    = $user?->name ?? 'Khách hàng Lapcare';
-        $customerPhone   = $user?->sdt ?? '';      // ví dụ cột trong bảng users là "phone"
-        $customerAddress = $user?->diachi ?? '';    // ví dụ cột là "address"
+        // Lấy giỏ hàng + join sản phẩm
+        $items = DB::table('giohang as g')
+            ->join('sanpham as s', 's.masp', '=', 'g.masp')
+            ->where('g.matk', $matk)
+            ->select(
+                'g.masp',
+                'g.soluong',
+                's.tensp',
+                's.hinhanh',
+                's.giasp',
+                's.khuyenmai'
+            )
+            ->get()
+            ->map(function ($it) {
+                $gia = (float) $it->giasp;
+                $km  = (float) ($it->khuyenmai ?? 0);
+                $it->gia_tinh = $km > 0 ? $gia * (1 - $km) : $gia;
+                return $it;
+            });
+
+        if ($items->isEmpty()) {
+            return redirect()->route('cart.index')
+                ->with('error', 'Giỏ hàng đang trống.');
+        }
 
         return view('thanhtoan', [
-            'product'         => $product,
-            'customerName'    => $customerName,
-            'customerPhone'   => $customerPhone,
-            'customerAddress' => $customerAddress,
+            'items'           => $items,
+            'customerName'    => $user->name ?? 'Khách hàng LapCare',
+            'customerPhone'   => $user->sdt ?? '',
+            'customerAddress' => $user->diachi ?? '',
         ]);
     }
 
+    /**
+     * POST /checkout/process
+     * Tạo đơn hàng từ GIỎ HÀNG
+     */
+    public function process(Request $request)
+    {
+        if (!Auth::check()) {
+            return redirect()->route('login')
+                ->with('error', 'Vui lòng đăng nhập.');
+        }
 
+        $user = Auth::user();
+        $matk = $user->matk;
+
+        // Validate form (khớp với view)
+        $data = $request->validate([
+            'address'        => 'required|string|max:500',
+            'note'           => 'nullable|string|max:2000',
+            'payment_image'  => 'nullable|image|mimes:jpg,jpeg,png|max:4096',
+        ]);
+
+        // Lấy giỏ hàng
+        $cartItems = DB::table('giohang')
+            ->where('matk', $matk)
+            ->get();
+
+        if ($cartItems->isEmpty()) {
+            return redirect()->route('cart.index')
+                ->with('error', 'Giỏ hàng trống.');
+        }
+
+        // Tạo mã đơn DHxxx
+        $max = DB::table('donhang')->max('madh'); // VD: DH012
+        $next = 1;
+        if ($max && preg_match('/^DH(\d{3})$/', $max, $m)) {
+            $next = intval($m[1]) + 1;
+        }
+        $madh = 'DH' . str_pad($next, 3, '0', STR_PAD_LEFT);
+
+        // Upload ảnh chuyển khoản (nếu có)
+        if ($request->hasFile('payment_image')) {
+            $request->file('payment_image')
+                ->store('payment_proofs', 'public');
+        }
+
+        DB::beginTransaction();
+        try {
+            // 1. Insert DONHANG
+            DB::table('donhang')->insert([
+                'madh'           => $madh,
+                'matk'           => $matk,
+                'ngaydat'        => now()->toDateString(),
+                'diachigiaohang' => $data['address'],
+                'phivanchuyen'   => 30000,
+                'VAT'            => 0,
+                'pttt'           => 'QR/Chuyển khoản',
+                'ttthanhtoan'    => 'chờ xác nhận',
+                'ttvanchuyen'    => 'đang xử lý',
+                'ghichu'         => $data['note'] ?? null,
+                'created_at'     => now(),
+                'updated_at'     => now(),
+            ]);
+
+            // 2. Insert CHITIETDONHANG
+            // (DB bạn có trigger tự tính dongia + trừ tồn)
+            foreach ($cartItems as $item) {
+                DB::table('chitietdonhang')->insert([
+                    'mahd'    => $madh,
+                    'masp'    => $item->masp,
+                    'soluong' => $item->soluong,
+                    'dongia'  => 0,
+                ]);
+            }
+
+            // 3. Xoá giỏ hàng
+            DB::table('giohang')->where('matk', $matk)->delete();
+
+            DB::commit();
+
+            return redirect()->route('checkout.success')
+                ->with('success',
+                    "Cảm ơn bạn đã đặt hàng! Đơn $madh đã được ghi nhận, vui lòng chờ hệ thống xác nhận giao dịch."
+                );
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            return back()->with('error', 'Lỗi tạo đơn: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * GET /checkout/success
+     */
+    public function success()
+    {
+        return view('checkout_success');
+    }
     public function showSelected(Request $request)
 {
-    //$maspList = $request->masp;  Đây là mảng các masp được tick
-    $maspList = json_decode($request->masp);
+    // Nếu cart của bạn có tick chọn sản phẩm: nhận mảng/chuỗi masp từ form
+    $maspList = $request->input('masp');
 
-    if (!$maspList || count($maspList) == 0) {
-        return redirect()->back()->with('error', 'Bạn phải chọn ít nhất 1 sản phẩm để thanh toán.');
-    }
-    $user = auth()->user();
-    // Lấy các sản phẩm tương ứng
-        $products = DB::table('giohang')
-                ->where('giohang.matk', $user->matk)
-                ->whereIn('giohang.masp', $maspList)
-                ->join('sanpham', 'giohang.masp', '=', 'sanpham.masp')
-                ->select(
-                    'giohang.soluong',      // số lượng người dùng chọn
-                    'giohang.masp',
-                    'sanpham.tensp',
-                    'sanpham.giasp',
-                    'sanpham.khuyenmai',
-                    'sanpham.hinhanh'
-        )
-        ->get();
-
-    if ($products->isEmpty()) {
-        return redirect()->back()->with('error', 'Không tìm thấy sản phẩm nào.');
+    // Có nơi gửi JSON string -> decode thử
+    if (is_string($maspList)) {
+        $decoded = json_decode($maspList, true);
+        if (json_last_error() === JSON_ERROR_NONE) {
+            $maspList = $decoded;
+        }
     }
 
-    // Mock user (sau sẽ thay bằng Auth)
-    $customerName    = 'Khách hàng Lapcare';
-    $customerPhone   = '0356819205';
-    $customerAddress = '';
+    // Nếu không tick gì thì mặc định thanh toán toàn bộ giỏ
+    if (empty($maspList)) {
+        return redirect()->route('checkout');
+    }
 
-    return view('pages.orderproduct', [
-        'products'        => $products,
-        'customerName'    => $customerName,
-        'customerPhone'   => $customerPhone,
-        'customerAddress' => $customerAddress,
-    ]);
+    // Lưu danh sách đã chọn vào session để /checkout chỉ hiển thị đúng các món đã tick
+    session(['checkout_masp' => $maspList]);
+
+    return redirect()->route('checkout');
 }
 
-
-    // Xử lý form thanh toán
-    public function process(Request $request, $masp)
-    {
-        $product = DB::table('sanpham')->where('masp', $masp)->first();
-        if (!$product) {
-            abort(404);
-        }
-
-        $data = $request->validate([
-            'fullname'      => 'required|string|max:255',
-            'phone'         => 'required|string|max:20',
-            'address'       => 'required|string|max:500',
-            'note'          => 'nullable|string|max:1000',
-            'payment_proof' => 'nullable|image|max:4096', // tối đa 4MB
-        ]);
-
-        $proofPath = null;
-        if ($request->hasFile('payment_proof')) {
-            $proofPath = $request->file('payment_proof')
-                                 ->store('payment_proofs', 'public');
-        }
-
-        // TODO: sau này lưu vào bảng orders,...
-
-        return redirect()->route('home')
-            ->with('success', 'Đặt hàng thành công! Chúng tôi sẽ liên hệ với bạn sớm.');
-    }
-  
-
-public function submit(Request $request)
-    {
-        $user = Auth::user();
-
-        // 1. Lấy dữ liệu từ form
-        $masp   = $request->input('masp');          // từ input hidden
-        $diachi = $request->input('address');
-        $ghichu = $request->input('note');
-
-        // 2. Tạo mã đơn (VD: DH + timestamp)
-        $madh = 'DH' . now()->format('YmdHis');
-
-        // 3. Các thông tin cố định / tạm tính
-        $matk         = $user->matk ?? 'TK001';     // tuỳ bạn đang lưu thế nào
-        $phivc        = 30000;                      // phí ship tạm
-        $vat          = 0;                          // nếu có VAT thì tự tính
-        $pttt         = 'Chuyển khoản';
-        $ttthanhtoan  = 'Chờ xác nhận';
-        $ttvanchuyen  = 'Chờ giao hàng';
-
-        // 4. Lưu vào bảng DONHANG (KHÔNG có cột masp)
-        DB::table('donhang')->insert([
-            'madh'          => $madh,
-            'matk'          => $matk,
-            'ngaydat'       => now()->toDateString(),
-            'diachigiaohang'=> $diachi,
-            'phivanchuyen'  => $phivc,
-            'VAT'           => $vat,
-            'pttt'          => $pttt,
-            'ttthanhtoan'   => $ttthanhtoan,
-            'ttvanchuyen'   => $ttvanchuyen,
-            'ghichu'        => $ghichu,
-        ]);
-
-        // 5. Lưu vào bảng CHITIETDONHANG – gắn sản phẩm với đơn
-        // (nếu bạn dùng giỏ nhiều sản phẩm thì sau này lặp theo giỏ,
-        // hiện tại "mua ngay 1 sản phẩm" nên để 1 dòng)
-        DB::table('chitietdonhang')->insert([
-            'mahd'    => $madh,
-            'masp'    => $masp,
-            'soluong' => 1,
-            'dongia'  => 0,   // có thể truyền giá thực from view nếu cần
-        ]);
-
-        // 6. Chuyển sang trang cảm ơn
-        return redirect()
-            ->route('order.success')
-            ->with('success', 'Đặt hàng thành công!');
-    }
 }

@@ -96,9 +96,9 @@
         <a href="{{ route('login') }}" class="btn-add-cart">
             Đăng nhập để thêm vào giỏ
         </a>
-    @endauth
+    @endauths
             <!-- Mua ngay -->
-            <form action="{{ route('thanhtoan.show', ['masp' => $product->masp]) }}" method="GET" class="form-buy">
+            <form action="{{ route('buy.now', ['masp' => $product->masp]) }}" method="GET" class="form-buy">
                 <button type="submit" class="btn-buy-now">Mua ngay</button>
             </form>
 

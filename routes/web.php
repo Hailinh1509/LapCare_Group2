@@ -72,10 +72,14 @@ Route::middleware('auth')->group(function () {
 
 
 
+Route::get('/buy-now/{masp}', [CartController::class, 'addFromBuyNow'])
+    ->name('buy.now');
 
-Route::get('/thanh-toan/{masp}', [ThanhtoanController::class, 'show'])
-    ->middleware('auth')   // <-- thêm
-    ->name('thanhtoan.show');
+
+
+Route::get('/thanh-toan/{masp}', [CartController::class, 'addFromBuyNow'])
+    ->name('buy.now');
+
 
 Route::post('/thanh-toan/{masp}', [ThanhtoanController::class, 'process'])
     ->middleware('auth')   // optional nhưng nên thêm
@@ -192,10 +196,14 @@ Route::post('/cart/update-qty', [CartController::class, 'updateQty'])->name('car
 Route::get('/cart/remove/{masp}', [CartController::class, 'remove'])->name('cart.remove');
 Route::get('/cart/clear', [CartController::class, 'clear'])->name('cart.clear');
 //xử lý nút đặt 
+Route::get('/checkout', [ThanhtoanController::class, 'checkout'])->name('checkout');
 Route::post('/checkout', [ThanhtoanController::class, 'showSelected'])
     ->name('cart.checkout');
 Route::post('/checkout/process', [ThanhtoanController::class, 'process'])
     ->name('checkout.process');
+
+// Trang cảm ơn (tuỳ bạn)
+Route::get('/checkout/success', [ThanhtoanController::class, 'success'])->name('checkout.success');
 
 /*
 |--------------------------------------------------------------------------

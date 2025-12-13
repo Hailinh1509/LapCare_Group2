@@ -16,10 +16,7 @@
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
 
     <style>
-        body {
-            background: #050b23;
-        }
-
+        body { background: #050b23; }
         .checkout-wrapper {
             max-width: 960px;
             margin: 24px auto 64px;
@@ -28,26 +25,14 @@
             padding: 24px 24px 32px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.2);
         }
-
-        .checkout-title {
-            font-size: 22px;
-            font-weight: 700;
-            margin-bottom: 8px;
-        }
-
-        .checkout-subtitle {
-            font-size: 14px;
-            color: #6b7280;
-            margin-bottom: 16px;
-        }
-
+        .checkout-title { font-size: 22px; font-weight: 700; margin-bottom: 8px; }
+        .checkout-subtitle { font-size: 14px; color: #6b7280; margin-bottom: 16px; }
         .product-summary {
             border-radius: 12px;
             border: 1px solid #e5e7eb;
             padding: 16px;
             background: #f9fafb;
         }
-
         .product-summary img {
             width: 100px;
             height: 100px;
@@ -55,7 +40,6 @@
             border-radius: 12px;
             border: 1px solid #e5e7eb;
         }
-
         .qr-box {
             border-radius: 12px;
             border: 1px solid #e5e7eb;
@@ -63,15 +47,13 @@
             text-align: center;
             background: #f9fafb;
         }
-
-        .qr-box img {
-            max-width: 220px;
-            width: 100%;
+        .qr-box img { max-width: 220px; width: 100%; border-radius: 12px; }
+        .form-label { font-weight: 500; }
+        .total-box {
             border-radius: 12px;
-        }
-
-        .form-label {
-            font-weight: 500;
+            border: 1px dashed #e5e7eb;
+            padding: 12px 14px;
+            background: #fff;
         }
     </style>
 </head>
@@ -81,11 +63,8 @@
 
     <div class="container">
         {{-- FORM DUY NHẤT --}}
-        <form action="{{ route('checkout.submit') }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('checkout.process') }}" method="POST" enctype="multipart/form-data">
             @csrf
-
-            {{-- gửi mã sản phẩm sang controller --}}
-            <input type="hidden" name="masp" value="{{ $product->masp ?? '' }}">
 
             <div class="checkout-wrapper">
 
@@ -125,19 +104,42 @@
                             <textarea name="note" class="form-control" rows="2"
                                       placeholder="Ví dụ: Giao giờ hành chính, gọi trước khi giao..."></textarea>
                         </div>
+
+                        {{-- Hiển thị lỗi validate (nếu có) --}}
+                        @if ($errors->any())
+                            <div class="alert alert-danger mt-2">
+                                <div class="fw-semibold mb-1">Vui lòng kiểm tra lại:</div>
+                                <ul class="mb-0">
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
+
+                        {{-- Thông báo session (nếu có) --}}
+                        @if (session('error'))
+                            <div class="alert alert-danger mt-2">{{ session('error') }}</div>
+                        @endif
+                        @if (session('success'))
+                            <div class="alert alert-success mt-2">{{ session('success') }}</div>
+                        @endif
                     </div>
 
-                    {{-- Cột phải: sản phẩm + QR + upload --}}
+                    {{-- Cột phải: danh sách sản phẩm + QR + upload --}}
                     <div class="col-md-6">
-                        <h5 class="mb-3">Sản phẩm</h5>
+                        <h5 class="mb-3">Danh sách sản phẩm</h5>
 
-                        <div class="product-summary mb-3 d-flex gap-3 align-items-center">
+                        @php $tong = 0; @endphp
+
+                        @forelse($items ?? [] as $it)
                             @php
-                                $gia    = (float) ($product->giasp ?? 0);
-                                $km     = (float) ($product->khuyenmai ?? 0);
-                                $gia_km = $km > 0 ? $gia * (1 - $km) : $gia;
+                                // Controller nên truyền sẵn gia_tinh và soluong, nhưng nếu thiếu thì tự tính an toàn:
+                                $gia = (float) ($it->gia_tinh ?? ($it->giasp ?? 0));
+                                $soluong = (int) ($it->soluong ?? 1);
+                                $tong += $gia * $soluong;
 
-                                $img = trim($product->hinhanh ?? '', '/');
+                                $img = trim($it->hinhanh ?? '', '/');
                                 if (str_starts_with($img, 'assets/')) {
                                     //
                                 } elseif (str_starts_with($img, 'images/')) {
@@ -147,27 +149,55 @@
                                 }
                             @endphp
 
-                            <div>
-                                @if(!empty($product->hinhanh))
-                                    <img src="{{ asset($img) }}" alt="{{ $product->tensp }}">
-                                @else
-                                    <div style="width:100px;height:100px;border-radius:12px;background:#eee;"></div>
-                                @endif
-                            </div>
+                            <div class="product-summary mb-3 d-flex gap-3 align-items-center">
+                                <div>
+                                    @if(!empty($it->hinhanh))
+                                        <img src="{{ asset($img) }}" alt="{{ $it->tensp ?? 'Sản phẩm' }}">
+                                    @else
+                                        <div style="width:100px;height:100px;border-radius:12px;background:#eee;"></div>
+                                    @endif
+                                </div>
 
-                            <div class="flex-grow-1">
-                                <div class="fw-semibold">
-                                    {{ $product->tensp ?? 'Sản phẩm' }} ({{ $product->masp ?? '' }})
-                                </div>
-                                <div class="text-danger fw-bold mt-1">
-                                    {{ number_format($gia_km, 0, ',', '.') }} đ
-                                </div>
-                                @if($km > 0)
-                                    <div class="small text-muted text-decoration-line-through">
+                                <div class="flex-grow-1">
+                                    <div class="fw-semibold">
+                                        {{ $it->tensp ?? 'Sản phẩm' }}
+                                        @if(!empty($it->masp))
+                                            ({{ $it->masp }})
+                                        @endif
+                                    </div>
+
+                                    <div class="text-danger fw-bold mt-1">
                                         {{ number_format($gia, 0, ',', '.') }} đ
                                     </div>
-                                    <div class="small text-success">Đang giảm {{ $km * 100 }}%</div>
-                                @endif
+
+                                    <div class="small text-muted">
+                                        Số lượng: {{ $soluong }}
+                                        <span class="mx-2">•</span>
+                                        Thành tiền: <strong>{{ number_format($gia * $soluong, 0, ',', '.') }} đ</strong>
+                                    </div>
+                                </div>
+                            </div>
+                        @empty
+                            <div class="alert alert-warning">
+                                Giỏ hàng đang trống. Vui lòng quay lại giỏ hàng để thêm sản phẩm.
+                            </div>
+                        @endforelse
+
+                        <div class="total-box mb-3">
+                            <div class="d-flex justify-content-between">
+                                <span class="text-muted">Tạm tính</span>
+                                <strong>{{ number_format($tong, 0, ',', '.') }} đ</strong>
+                            </div>
+                            <div class="d-flex justify-content-between mt-1">
+                                <span class="text-muted">Phí vận chuyển</span>
+                                <strong>+ (tính sau)</strong>
+                            </div>
+                            <div class="d-flex justify-content-between mt-1">
+                                <span class="text-muted">Tổng thanh toán</span>
+                                <strong class="text-danger">{{ number_format($tong, 0, ',', '.') }} đ</strong>
+                            </div>
+                            <div class="small text-muted mt-1">
+                                (Tổng thanh toán thực tế có thể thay đổi tùy phí vận chuyển/VAT theo hệ thống)
                             </div>
                         </div>
 
@@ -177,7 +207,9 @@
                             <img src="{{ asset('assets/images/QR.jpg') }}" alt="QR thanh toán">
                             <p class="mt-2 small text-muted mb-0">
                                 Nội dung chuyển khoản:
-                                <strong>{{ $product->masp ?? 'Mã sản phẩm' }}</strong> + SĐT
+                                <strong>LapCare + SĐT</strong>
+                                <br>
+                                <span class="small">(Hệ thống sẽ ghi nhận đơn và xác nhận sau)</span>
                             </p>
                         </div>
 
@@ -191,8 +223,7 @@
 
                         {{-- Nút submit --}}
                         <div class="d-grid mt-4">
-                            <button type="submit"
-                                    class="btn btn-danger w-100 mt-3">
+                            <button type="submit" class="btn btn-danger w-100 mt-3">
                                 Xác nhận đặt hàng
                             </button>
                         </div>
@@ -200,7 +231,7 @@
                 </div>
 
             </div>{{-- /.checkout-wrapper --}}
-        </form> {{-- ĐÓNG form DUY NHẤT --}}
+        </form>{{-- ĐÓNG form DUY NHẤT --}}
     </div>{{-- /.container --}}
 
     @include('partials.footer')

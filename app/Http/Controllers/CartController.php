@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\GioHang;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class CartController extends Controller
 {
@@ -39,6 +41,37 @@ class CartController extends Controller
         ->update(['soluong' => $request->soluong]);
 
     return response()->json(['ok' => true]);
+}
+public function addFromBuyNow($masp)
+{
+    if (!Auth::check()) {
+        return redirect()->route('login')->with('error', 'Vui lòng đăng nhập để mua hàng.');
+    }
+
+    $user = Auth::user();
+    $matk = $user->matk;
+
+    // kiểm tra sản phẩm tồn tại
+    $sp = DB::table('sanpham')->where('masp', $masp)->first();
+    if (!$sp) abort(404);
+
+    // nếu đã có trong giỏ thì +1, chưa có thì insert
+    $exist = DB::table('giohang')->where('matk', $matk)->where('masp', $masp)->first();
+
+    if ($exist) {
+        DB::table('giohang')
+            ->where('matk', $matk)->where('masp', $masp)
+            ->update(['soluong' => $exist->soluong + 1]);
+    } else {
+        DB::table('giohang')->insert([
+            'matk' => $matk,
+            'masp' => $masp,
+            'soluong' => 1,
+        ]);
+    }
+
+    // chuyển về giỏ hàng hoặc checkout
+    return redirect()->route('cart.index')->with('success', 'Đã thêm sản phẩm vào giỏ hàng.');
 }
 
     // ============================

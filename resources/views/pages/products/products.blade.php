@@ -221,7 +221,7 @@
                             </p>
 
 <div class="btn-group">
-    <a href="{{ route('thanhtoan.show', ['masp' => $sp->masp]) }}" class="btn-buy">
+    <a href="{{ route('buy.now', ['masp' => $sp->masp]) }}" class="btn-buy">
         Mua hàng
     </a>
 
